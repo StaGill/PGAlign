@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+message: "If you use GALAXY in your research, please cite the accompanying paper."
+title: "GALAXY: Group Alignment of Mass Spectrometry data"
+type: software
+authors:
+  - family-names: Deng
+    given-names: Anji
+    affiliation: "Department of Epidemiology, Biostatistics, and Occupational Health, McGill University"
+  - family-names: Zhang
+    given-names: Yuyang
+    affiliation: "Department of Epidemiology, Biostatistics, and Occupational Health, McGill University"
+  - family-names: Zhang
+    given-names: Qihuang
+    email: qihuang.zhang@mcgill.ca
+    affiliation: "Department of Epidemiology, Biostatistics, and Occupational Health, McGill University"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+repository-code: "https://github.com/StaGill/GALAXY"
+url: "https://stagill.github.io/GALAXY/"
+keywords:
+  - MALDI
+  - mass spectrometry
+  - spatial metabolomics
+  - alignment
+  - imaging
+license: MIT
+preferred-citation:
+  type: unpublished
+  title: "GALAXY: Group Alignment of Mass Spectrometry data for imaging and spatial metabolomics"
+  authors:
+    - family-names: Deng
+      given-names: Anji
+    - family-names: Zhang
+      given-names: Yuyang
+    - family-names: Zhang
+      given-names: Qihuang
+      email: qihuang.zhang@mcgill.ca
+  year: 2026
+  notes: "Manuscript under peer review. Please contact the corresponding author for the current preprint."

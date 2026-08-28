@@ -1,0 +1,130 @@
+---
+title: "Maaike_plot"
+author: "Anji Deng"
+date: '2023-10-20'
+output:
+  html_document: default
+  pdf_document: default
+---
+
+
+```{r echo=FALSE, warning=FALSE,message=FALSE}
+library(dplyr)
+library(ggplot2)
+```
+
+
+##### Shift plot
+```{r echo=FALSE}
+setwd('/Users/anjideng1/Desktop/MALDI/')
+shift_data = read.csv('output_Maaike/mzshifting.csv')
+shift_data
+```
+```{r}
+MZshiftingdataplot <- data.frame(mzvalues = c(shift_data$mzvalue_start, shift_data$mzvalue_end), shift = rep(shift_data$shift_fromorigin,2)) %>%
+  arrange(mzvalues)
+
+MZshiftingdataplot$shift_mz <- MZshiftingdataplot$shift * 0.5
+```
+
+```{r echo=FALSE}
+# pdf(file = paste0("output/explore/linetwoweeks.pdf"),height = 8, width = 12)
+color_palatte <- c("#CAE7B9", "#F3DE8A",  "#EB9486", "#7E7F9A", "#565F41", "#D1D1D1","#6D1A9C","#15821E","#3A84E6","#997273")
+strip_color <- "#0A1D37"
+```
+
+```{r}
+MZshiftingdataplot
+```
+
+
+```{r echo=FALSE}
+shiftplot <- ggplot(MZshiftingdataplot) + 
+  geom_line(aes(y=shift, x=mzvalues), size = 1) + 
+  geom_point(aes(y=shift, x=mzvalues), size = 0.8) + 
+  scale_color_manual(values=color_palatte) + 
+  labs(x = "m/z values", y = "shift") + 
+  scale_x_continuous(breaks = seq(100, 2000, by = 100)) +
+  ## coord_cartesian(ylim = c(0.2, 0.8)) +
+  ## geom_vline(xintercept=c(21, 25, 50, 188, 250, 440, 600, 880), linetype=2, color = "#B3B6B7", size = 0.3)+
+  theme_bw()  +
+  theme(text = element_text(size=16, family="URWHelvetica"),  axis.text = element_text(size = 16, family="URWHelvetica"), panel.spacing = unit(1, "lines")) +
+  theme(strip.background = element_rect(fill=strip_color,color=strip_color))+ # #535b44
+  theme(strip.text = element_text(colour = 'white')) +
+  theme(panel.border = element_rect(colour = strip_color), legend.position = "none") +
+  theme(axis.text = element_text(size = 20), axis.title=element_text(size = 25))
+
+plotly::ggplotly(shiftplot)
+```
+
+```{r echo=FALSE}
+ggsave(file = "shift_plot_Maaike.png", width = 18, height = 4, dpi = 300)
+```
+
+
+##### Shift plot in m/z unit
+
+```{r}
+shift_data
+```
+
+```{r}
+data_wk5 <- subset(table, types == 'Week 5')
+shift <- rep(0, nrow(data_wk5))
+
+for (k in 1:nrow(data_wk5)) {
+  for (i in 1:nrow(shift_data)) {
+     if (data_wk5$mzvalues[k] >= shift_data$mzvalue_start[i] & data_wk5$mzvalues[k] <= shift_data$mzvalue_end[i]) {
+       if (shift_data$shift_fromorigin[i] < 0) {
+         
+         shift_unit <- abs(shift_data$shift_fromorigin[i])
+         shift[k] <- - (data_wk5$mzvalues[k] - data_wk5$mzvalues[k - shift_unit])
+         
+       } else if (shift_data$shift_fromorigin[i] > 0) {
+         
+         shift[k] <- data_wk5$mzvalues[k + shift_data$shift_fromorigin[i]] - data_wk5$mzvalues[k]
+         
+       } else {
+         shift[k] <- 0
+       }
+   }
+  }
+}
+
+```
+
+```{r}
+sum(MZshiftingdataplot$mzvalues %in% data_unaligned$mzvalues)
+```
+
+```{r}
+shiftingplot_mz <- data.frame('mzvalues' = data_unaligned$mzvalues, shift = shift)
+```
+
+
+```{r echo=FALSE}
+shiftplot <- ggplot(shiftingplot_mz) + 
+  geom_line(aes(y=shift, x=mzvalues), size = 1) + 
+  geom_point(aes(y=shift, x=mzvalues), size = 0.8) + 
+  scale_color_manual(values=color_palatte) + 
+  labs(x = "m/z values", y = "shift in m/z") + 
+  scale_x_continuous(breaks = seq(100, 2000, by = 100)) +
+  ## coord_cartesian(ylim = c(0.2, 0.8)) +
+  ## geom_vline(xintercept=c(21, 25, 50, 188, 250, 440, 600, 880), linetype=2, color = "#B3B6B7", size = 0.3)+
+  theme_bw()  +
+  theme(text = element_text(size=16, family="URWHelvetica"),  axis.text = element_text(size = 16, family="URWHelvetica"), panel.spacing = unit(1, "lines")) +
+  theme(strip.background = element_rect(fill=strip_color,color=strip_color))+ # #535b44
+  theme(strip.text = element_text(colour = 'white')) +
+  theme(panel.border = element_rect(colour = strip_color), legend.position = "none") +
+  theme(axis.text = element_text(size = 20), axis.title=element_text(size = 25))
+
+plotly::ggplotly(shiftplot)
+```
+
+```{r}
+setwd('/Users/anjideng1/Desktop/MALDI/Maaike_plot')
+ggsave(file = "shift_plot_Maaike_mz.png", width = 18, height = 4, dpi = 300)
+```
+
+
+

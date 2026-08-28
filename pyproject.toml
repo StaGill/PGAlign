@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "GalaxyPython"
+dynamic = ["version"]
+description = "GALAXY: Group Alignment of Mass Spectrometry data for imaging and spatial metabolomics."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.9"
+authors = [
+    { name = "Anji Deng" },
+    { name = "Yuyang Zhang" },
+    { name = "Qihuang Zhang", email = "qihuang.zhang@mcgill.ca" },
+]
+maintainers = [
+    { name = "Qihuang Zhang", email = "qihuang.zhang@mcgill.ca" },
+]
+keywords = [
+    "MALDI",
+    "mass spectrometry",
+    "spatial metabolomics",
+    "alignment",
+    "imaging",
+    "bioinformatics",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+    "numpy>=1.20",
+    "scipy>=1.7",
+    "pandas>=1.3",
+    "scanpy>=1.9",
+    "anndata>=0.8",
+    "tqdm",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7.0"]
+
+[project.urls]
+Homepage = "https://stagill.github.io/GALAXY/"
+Documentation = "https://stagill.github.io/GALAXY/"
+Repository = "https://github.com/StaGill/GALAXY"
+Issues = "https://github.com/StaGill/GALAXY/issues"
+
+[tool.setuptools.dynamic]
+version = { attr = "GalaxyPython.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["GalaxyPython*"]
+exclude = ["tests*", "CodeInPaper*"]
+
+[tool.setuptools.package-data]
+GalaxyPython = ["data/*.npz"]

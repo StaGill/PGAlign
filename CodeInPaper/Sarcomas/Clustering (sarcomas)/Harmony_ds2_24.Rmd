@@ -1,0 +1,270 @@
+---
+title: "harmony"
+author: "Anji Deng"
+date: "2024-12-12"
+output: html_document
+---
+
+
+```{r message = FALSE}
+library(harmony)
+library(Seurat)
+library(dplyr)
+library(cowplot)
+library(ggplot2)
+```
+
+```{r}
+file <- "/Users/anjideng1/Desktop/MALDI/data/CanineSarcomas/rds/ds_2_24.h5ad"
+
+# Define the output .rds file name
+output_file <- sub(".h5ad$", ".rds", file)
+
+# Convert the file
+cancer <- sceasy::convertFormat(file, from = "anndata", to = "seurat", outFile = output_file)
+```
+
+
+```{r}
+cancer@meta.data$ds <- c(rep("2", 24424), rep("24", 12802))
+cancer@assays
+```
+
+```{r}
+cancer <- cancer %>%
+  NormalizeData(verbose = FALSE)
+```
+
+
+```{r}
+all_features <- rownames(cancer)
+
+cancer <- cancer %>%
+    ScaleData(features = all_features, verbose = FALSE) %>%
+    RunPCA(features = all_features, npcs = 20, verbose = FALSE)
+```
+
+
+```{r}
+pca_loadings <- Loadings(cancer, reduction = "pca")
+head(pca_loadings)
+
+ElbowPlot(cancer)
+```
+
+## Filtering out the PCs
+
+```{r}
+pca_scores <- as.data.frame(cancer@reductions$pca@cell.embeddings)
+pca_scores$ds <- cancer@meta.data$ds
+
+p_values <- numeric(20)
+
+for (i in 1:20) {
+  
+  t_test_result <- t.test(pca_scores[, i] ~ pca_scores$ds)
+  
+  p_values[i] <- t_test_result$p.value
+}
+```
+
+```{r}
+non_sig_pcs <- which(p_values > 0.5)
+non_sig_pcs
+
+selected_pc <- pca_scores[, non_sig_pcs]
+
+cancer@reductions$pca@cell.embeddings <- as.matrix(selected_pc)
+head(cancer@reductions$pca@cell.embeddings)
+```
+
+
+```{r}
+n_pcs <- ncol(cancer[["harmony"]]@cell.embeddings)
+
+cancer <- cancer %>%
+  FindNeighbors(reduction = "harmony", dims = 1:min(n_pcs, 20)) %>%
+  FindClusters(resolution = 0.5)
+```
+
+## End - Filtering out the PCs 
+
+```{r}
+## run harmony with default parameters
+cancer <- cancer %>% RunHarmony("ds")
+```
+
+```{r}
+cancer <- cancer %>%
+    FindNeighbors(reduction = "harmony") %>%
+    FindClusters(resolution = 0.375)
+```
+
+
+```{r}
+cancer$seurat_clusters
+```
+
+
+## Clustering Plots for ds2 and ds24, separately
+
+```{r}
+cancer_ds2 <- subset(cancer, subset = ds == "2")
+cancer_ds24 <- subset(cancer, subset = ds == "24")
+
+output_path_ds <- "/Users/anjideng1/Desktop/MALDI/Clustering_Sarcomas/figure_ds2_24/"
+```
+
+```{r}
+ggplot(cancer_ds2@meta.data, aes(x = x, y = y, color = as.factor(seurat_clusters))) +
+  geom_point(size = 1) +
+  scale_color_brewer(palette = "Set3") + # Use a color palette for clusters
+  labs(title = "Clustering Plot for ds2", color = "Cluster") +
+  theme_minimal() +
+  theme(legend.position = "right") -> p_ds2
+```
+
+
+```{r}
+ggsave(filename = paste0(output_path_ds, "harmony_20_0.375_ds2.png"), 
+       plot = p_ds2, width = 8, height = 6)
+```
+
+
+```{r}
+ggplot(cancer_ds24@meta.data, aes(x = x, y = y, color = as.factor(seurat_clusters))) +
+  geom_point(size = 1) +
+  scale_color_brewer(palette = "Set3") + # Use a color palette for clusters
+  labs(title = "Clustering Plot for ds24", color = "Cluster") +
+  theme_minimal() +
+  theme(legend.position = "right") -> p_ds24
+```
+
+
+```{r}
+ggsave(filename = paste0(output_path_ds, "harmony_20_0.375_ds24.png"), 
+       plot = p_ds24, width = 8, height = 6)
+```
+
+
+
+# Refine the figures (merging clusters of noises)
+
+```{r}
+cancer_ds2$seurat_clusters
+```
+
+```{r}
+library(dplyr)
+```
+
+```{r}
+# Re-label the clusters using case_when
+cancer_ds2$clusters_renamed <- case_when(
+  cancer_ds2$seurat_clusters == 0 ~ "cancer 1",
+  cancer_ds2$seurat_clusters == 1 ~ "noise",
+  cancer_ds2$seurat_clusters == 2 ~ "noise",
+  cancer_ds2$seurat_clusters == 3 ~ "cancer 3",
+  cancer_ds2$seurat_clusters == 4 ~ "unclassified 1",
+  cancer_ds2$seurat_clusters == 5 ~ "noise",
+  cancer_ds2$seurat_clusters == 6 ~ "necrosis 2",
+  cancer_ds2$seurat_clusters == 7 ~ "necrosis 1",
+  cancer_ds2$seurat_clusters == 8 ~ "noise",
+  cancer_ds2$seurat_clusters == 9 ~ "noise",
+  cancer_ds2$seurat_clusters == 10 ~ "noise",
+  cancer_ds2$seurat_clusters == 11 ~ "noise")
+
+
+cancer_ds24$clusters_renamed <- case_when(
+  cancer_ds24$seurat_clusters == 0 ~ "cancer 1",
+  cancer_ds24$seurat_clusters == 1 ~ "noise",
+  cancer_ds24$seurat_clusters == 2 ~ "noise",
+  cancer_ds24$seurat_clusters == 3 ~ "cancer 3",
+  cancer_ds24$seurat_clusters == 4 ~ "unclassified 1",
+  cancer_ds24$seurat_clusters == 5 ~ "noise",
+  cancer_ds24$seurat_clusters == 6 ~ "necrosis 2",
+  cancer_ds24$seurat_clusters == 7 ~ "necrosis 1",
+  cancer_ds24$seurat_clusters == 8 ~ "noise",
+  cancer_ds24$seurat_clusters == 9 ~ "noise",
+  cancer_ds24$seurat_clusters == 10 ~ "noise",
+  cancer_ds24$seurat_clusters == 11 ~ "noise")
+```
+
+```{r}
+ggplot(cancer_ds2@meta.data, aes(x = x, y = y, color = as.factor(clusters_renamed))) +
+  geom_point() +
+  scale_color_brewer(palette = "Set3") + # Use a color palette for clusters
+  labs(title = "Clustering Plot for ds2", color = "Cluster") +
+  theme_minimal() +
+  theme(legend.position = "right") -> p_ds2_refined
+```
+
+# Make the background 'noise' grey
+```{r}
+library(RColorBrewer)
+
+# Extract Set3 palette with enough colors
+set3_colors <- brewer.pal(n = 12, name = "Set3")
+
+# Assign Set3 colors to each category, replacing "noise" with black
+custom_colors <- setNames(set3_colors, c(
+  "cancer 1",
+  "noise",
+  "noise",
+  "cancer 3",
+  "unclassified 1",
+  "noise",
+  "necrosis 2",
+  "necrosis 1",
+  "noise",
+  "noise",
+  "noise",
+  "noise"
+))
+custom_colors["noise"] <- "grey"  # Replace "noise" with black
+```
+
+
+```{r}
+# Generate the plot with the modified palette
+p_ds2_refined <- ggplot(cancer_ds2@meta.data, aes(x = x, y = y, color = as.factor(clusters_renamed))) +
+  geom_point(size = 1.6, shape = 15) + 
+  scale_color_manual(values = custom_colors) + # Use modified Set3 colors
+  labs(title = "Clustering Plot for ds2", color = "Cluster") +
+  theme_minimal() +
+  theme(legend.position = "right",
+        legend.text = element_text(size = 14),
+        legend.title = element_text(size = 16),
+        legend.key.size = unit(1, "cm"))
+
+p_ds2_refined
+```
+
+```{r}
+ggsave(filename = paste0(output_path_ds, "harmony_0.375_ds2_final.png"), 
+       plot = p_ds2_refined, width = 8, height = 6)
+```
+
+```{r}
+p_ds24_refined <- ggplot(cancer_ds24@meta.data, aes(x = x, y = y, color = as.factor(clusters_renamed))) +
+  geom_point(size = 1.9, shape = 15) +
+  scale_color_manual(values = custom_colors) + # Use modified Set3 colors
+  labs(title = "Clustering Plot for ds24", color = "Cluster") +
+  theme_minimal() +
+    theme(legend.position = "right",
+        legend.text = element_text(size = 16),
+        legend.title = element_text(size = 18),
+        legend.key.size = unit(1, "cm"))
+
+p_ds24_refined
+```
+
+```{r}
+ggsave(filename = paste0(output_path_ds, "harmony_0.375_ds24_final.png"), 
+       plot = p_ds24_refined, width = 8, height = 6)
+```
+
+
+
+
+

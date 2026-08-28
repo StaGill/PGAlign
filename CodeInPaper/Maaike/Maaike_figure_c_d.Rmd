@@ -1,0 +1,183 @@
+---
+title: "MSIWarp Plot"
+author: "Anji Deng"
+date: '2024-01-25'
+output: html_document
+---
+
+
+```{r echo=FALSE, warning=FALSE,message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(ggh4x)
+```
+
+```{r echo=FALSE}
+# pdf(file = paste0("output/explore/linetwoweeks.pdf"),height = 8, width = 12)
+color_palatte <- c("#CAE7B9", "#F3DE8A",  "#EB9486", "#7E7F9A", "#565F41", "#D1D1D1","#6D1A9C","#15821E","#3A84E6","#997273")
+strip_color <- "#0A1D37"
+```
+
+
+
+```{r echo=FALSE}
+# 6. Compare the aligned spectrum -------------------------------------------------
+setwd('/Users/anjideng1/Desktop/MALDI/')
+
+## Read the original file
+table <- NULL
+for (weekid in c('wk2', 'wk5', 'aligned', 'msi')){
+  tablei <- read.csv(paste0("output_Maaike/mean_spec_mv_",weekid,".csv"), header = T)
+  colnames(tablei) <- NULL
+  table <- rbind(table, data.frame(tablei, type = weekid))
+}
+
+#setwd('/Users/anjideng1/Desktop/MALDI/output_Maaike')
+#table <- read.csv("mean_spec_mv_msi.csv")
+
+```
+
+
+```{r echo=FALSE}
+table$types = factor(table$type, levels = c('wk2', 'wk5', 'aligned', 'msi'), 
+                     labels = c("Week 2", "Week 5", "aligned", "MSI aligned"))
+
+table <- table %>%
+  mutate(intensity = X3) %>%
+  mutate(mzvalues = X2)
+```
+
+### Shift Plot
+
+```{r}
+shiftingplot_mz <- data.frame("mzvalues" = table[table$types == 'Week 5', 'mzvalues'], 
+                              "aligned" = table[table$types == 'MSI aligned', 'mzvalues'])
+shiftingplot_mz$shift <- shiftingplot_mz$aligned - shiftingplot_mz$mzvalues
+```
+
+```{r}
+sum(table[table$types == 'Week 5', 'mzvalues'] == table[table$types == 'MSI aligned', 'mzvalues'])
+```
+
+```{r}
+# table[table$types == 'aligned', 'mzvalues'][2000:2500]
+# table[table$types == 'MSI aligned', 'mzvalues'][2000:2500]
+```
+
+```{r}
+shiftplot <- ggplot(shiftingplot_mz) + 
+  geom_line(aes(y=shift, x=mzvalues), size = 1) + 
+  geom_point(aes(y=shift, x=mzvalues), size = 0.8) + 
+  scale_color_manual(values=color_palatte) + 
+  labs(x = "m/z values", y = "shift in m/z") + 
+  scale_x_continuous(breaks = seq(100, 2000, by = 100)) +
+  ## coord_cartesian(ylim = c(0.2, 0.8)) +
+  ## geom_vline(xintercept=c(21, 25, 50, 188, 250, 440, 600, 880), linetype=2, color = "#B3B6B7", size = 0.3)+
+  theme_bw()  +
+  theme(text = element_text(size=16, family="URWHelvetica"),  axis.text = element_text(size = 16, family="URWHelvetica"), panel.spacing = unit(1, "lines")) +
+  theme(strip.background = element_rect(fill=strip_color,color=strip_color))+ # #535b44
+  theme(strip.text = element_text(colour = 'white')) +
+  theme(panel.border = element_rect(colour = strip_color), legend.position = "none") +
+  theme(axis.text = element_text(size = 22), axis.title=element_text(size = 30))
+
+plotly::ggplotly(shiftplot)
+```
+
+```{r}
+setwd('/Users/anjideng1/Desktop/MALDI/Maaike Plot')
+ggsave(file = "shift_plot_Maaike_mz_msi_wide.png", width = 18, height = 4, dpi = 300)
+```
+
+
+
+
+### Spectrum plot
+
+```{r}
+breaks <- c(-Inf, 194.6, 195.4, 272.6, 273.3, 676.6, 677.4, Inf)
+table$anchor_ind <- cut(table$mzvalues, breaks = breaks, 
+                        labels = c("0", "Anchor 1", "0", "Anchor 2", "0", "Anchor 3", "0"))
+
+table <- table %>%
+  mutate(vline = case_when(anchor_ind == "0" ~ NA,
+                           anchor_ind == "Anchor 1" ~ 194.95, 
+                           anchor_ind == "Anchor 2" ~ 273.02,
+                           anchor_ind == "Anchor 3" ~ 677.05))
+
+table <- table %>%
+  mutate(xlim_left = case_when(anchor_ind == "0" ~ NA,
+                               anchor_ind == "Anchor 1" ~ 194.75, 
+                               anchor_ind == "Anchor 2" ~ 272.75,
+                               anchor_ind == "Anchor 3" ~ 676.75))
+
+
+table <- table %>%
+  mutate(xlim_right = case_when(anchor_ind == "0" ~ NA,
+                                anchor_ind == "Anchor 1" ~ 195.25, 
+                                anchor_ind == "Anchor 2" ~ 273.25,
+                                anchor_ind == "Anchor 3" ~ 677.25))
+
+
+table_anchor <- subset(table, anchor_ind %in% c("Anchor 1", "Anchor 2", "Anchor 3"))
+
+table_anchor$xlim_left <- unlist(table_anchor$xlim_left)
+table_anchor$xlim_right <- unlist(table_anchor$xlim_right)
+```
+
+
+
+```{r}
+breaks_fun <- function(x){
+  if (max(x) < 200){
+    c(194.75, 195, 195.25)}
+  else if (max(x) < 300){
+    c(272.75, 273, 273.25)}
+  else{
+    c(676.75, 677, 677.25)}}
+```
+
+
+
+```{r}
+lineplot <- ggplot(table_anchor) + 
+  geom_line(aes(y=log(intensity), x=mzvalues, color = types), size = 1) + 
+  # geom_point(aes(y=intensity, x=mzvalues, color = weeks), size = 0.6, data = table2) + 
+  # geom_segment(aes(x = start, y = ylevel, xend = end, yend = ylevel), size = 0.6,  data = table3) +
+  scale_color_manual(values=color_palatte) + 
+  labs(x = "m/z values", y = "log intensity") + 
+  facet_grid2(vars(types), vars(anchor_ind), scales = "free", independent = "y") + 
+  geom_vline(aes(xintercept = vline), colour = "darkgrey", linetype = 2, size = 0.8) + 
+  scale_x_continuous(breaks = breaks_fun) +
+  # scale_x_continuous(limits = unlist(xlim_limits)) +
+  # coord_cartesian(aes(xlim = c(xlim_left, xlim_right))) +
+
+  theme_bw()  +
+  # scale_y_log10() + # equal space for log 10
+  # scale_y_continuous(limits = c(0.8, 5)) +
+  theme(text = element_text(size=16, family="URWHelvetica"),  axis.text = element_text(size = 16, family="URWHelvetica"), panel.spacing = unit(1, "lines") ) +
+  theme(strip.background = element_rect(fill=strip_color, color=strip_color))+ # #535b44
+  theme(strip.text = element_text(colour = 'white')) +
+  theme(panel.border = element_rect(colour = strip_color), legend.position = "none") +
+  theme(axis.text = element_text(size = 15), axis.title=element_text(size = 28),
+        strip.text = element_text(size = 25)) +
+  theme(panel.spacing.x = unit(10, "mm"))
+  # theme(strip.text.y = element_blank(), strip.text.x = element_blank()) 
+  
+
+plotly::ggplotly(lineplot)
+```
+
+
+```{r}
+setwd('/Users/anjideng1/Desktop/MALDI/')
+ggsave(file = "spectrum_plot_Maaike_msi.png", width = 12, height = 8, dpi = 300)
+```
+
+
+
+
+
+
+
+
+

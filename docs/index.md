@@ -1,18 +1,18 @@
-# GALAXY
+# PGAlign
 
-**Group Alignment of Mass Spectrometry data** &mdash; a peak-group-based
+**Peak-Group Alignment of mass spectrometry data** &mdash; a peak-group-based
 algorithm for aligning mass spectrometry (MS) spectra onto a common m/z grid.
 
-GALAXY is designed for imaging and spatial metabolomics data such as MALDI-MS,
+PGAlign is designed for imaging and spatial metabolomics data such as MALDI-MS,
 where spectra from different runs or tissues exhibit small m/z shifts that
 prevent direct comparison. By aligning an "unknown" spectrum to a reference
-while forcing matched spectra to share m/z values, GALAXY enables:
+while forcing matched spectra to share m/z values, PGAlign enables:
 
 - joint spatial segmentation across tissues or time points
 - classification using combined datasets
 - other multi-sample analyses that require a common m/z grid
 
-![Workflow](assets/galaxy_workflow.png)
+![Workflow](assets/pgalign_workflow.png)
 
 ## At a glance
 
@@ -28,7 +28,7 @@ of &plusmn;4 m/z units. See [Tutorial](tutorial.md) for an end-to-end walk-throu
 
 ## Next steps
 
-- [Install GALAXY](install.md)
+- [Install PGAlign](install.md)
 - [Walk through the tutorial](tutorial.md)
 - [Try the bundled toy data](toy-data.md)
 - [Browse the API reference](api/peak-calling.md)

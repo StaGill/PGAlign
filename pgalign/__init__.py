@@ -1,4 +1,4 @@
-"""GALAXY: Group Alignment of Mass Spectrometry data.
+"""PGAlign: peak group alignment of mass spectrometry data.
 
 Implementation accompanying the Deng, Zhang & Zhang (2026) manuscript (under review).
 The four pipeline steps in the paper map to these public objects:

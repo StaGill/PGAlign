@@ -1,6 +1,6 @@
 # Canine sarcomas — alignment and classification
 
-Reproduces the canine sarcoma case study (Section 3.3 of the paper). GALAXY
+Reproduces the canine sarcoma case study (Section 3.3 of the paper). PGAlign
 aligns cancer-tissue spectra (samples Ds1–Ds4, Ds18–Ds20, Ds24) to a normal
 tissue reference (Ds26); classification performance is then evaluated before
 and after alignment, alongside joint clustering across cancer samples.
@@ -12,7 +12,7 @@ and after alignment, alongside joint clustering across cancer samples.
 | `Sarcomas_Analysis.ipynb`            | PCA + LDA classification (leave-one-out CV) on `.h5ad` files for each sample  |
 | `Sarcomas_figure_a.ipynb`            | Figure-A generation: alignment heatmaps and shift distributions               |
 | `Sarcomas_figure_b_c_d.Rmd`          | Figures B–D in R                                                              |
-| `Clustering (sarcomas)/Harmony_ds2_24.Rmd` | Harmony-based joint clustering of two samples after GALAXY alignment   |
+| `Clustering (sarcomas)/Harmony_ds2_24.Rmd` | Harmony-based joint clustering of two samples after PGAlign alignment   |
 
 ## Data
 

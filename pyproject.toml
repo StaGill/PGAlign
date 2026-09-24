@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "GalaxyPython"
+name = "pgalign"
 dynamic = ["version"]
-description = "GALAXY: Group Alignment of Mass Spectrometry data for imaging and spatial metabolomics."
+description = "PGAlign: peak group alignment of mass spectrometry data for imaging and spatial metabolomics."
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.9"
@@ -50,17 +50,17 @@ dependencies = [
 test = ["pytest>=7.0"]
 
 [project.urls]
-Homepage = "https://stagill.github.io/GALAXY/"
-Documentation = "https://stagill.github.io/GALAXY/"
-Repository = "https://github.com/StaGill/GALAXY"
-Issues = "https://github.com/StaGill/GALAXY/issues"
+Homepage = "https://stagill.github.io/PGAlign/"
+Documentation = "https://stagill.github.io/PGAlign/"
+Repository = "https://github.com/StaGill/PGAlign"
+Issues = "https://github.com/StaGill/PGAlign/issues"
 
 [tool.setuptools.dynamic]
-version = { attr = "GalaxyPython.__version__" }
+version = { attr = "pgalign.__version__" }
 
 [tool.setuptools.packages.find]
-include = ["GalaxyPython*"]
+include = ["pgalign*"]
 exclude = ["tests*", "CodeInPaper*"]
 
 [tool.setuptools.package-data]
-GalaxyPython = ["data/*.npz"]
+pgalign = ["data/*.npz"]

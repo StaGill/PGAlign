@@ -1,6 +1,6 @@
 # PGAlign
 
-**PGAlign (Group Alignment of Mass Spectrometry data)** is a peak-group-based
+**PGAlign (Peak-Group Alignment of mass spectrometry data)** is a peak-group-based
 algorithm for aligning mass spectrometry (MS) spectra onto a common m/z grid.
 It is designed for imaging and spatial metabolomics data such as MALDI-MS,
 where spectra from different runs or tissues often exhibit small m/z shifts
@@ -11,10 +11,10 @@ McGill University — corresponding author: <qihuang.zhang@mcgill.ca>
 
 **Documentation:** <https://stagill.github.io/PGAlign/>
 
-![Overview of the PGAlign workflow](images/galaxy_workflow.png)
+![Overview of the PGAlign workflow](images/pgalign_workflow.png)
 
 By aligning an "unknown" spectrum (or dataset) to a reference while *forcing*
-matched spectra to share the same m/z values, GALAXY enables downstream
+matched spectra to share the same m/z values, PGAlign enables downstream
 analyses such as:
 
 - joint spatial segmentation across tissues or time points
@@ -22,15 +22,15 @@ analyses such as:
 - other multi-sample analyses that require a common m/z grid
 
 This repository contains the reference Python implementation accompanying the
-GALAXY manuscript (Deng, Zhang & Zhang, 2026; under peer review).
+PGAlign manuscript (Deng, Zhang & Zhang, 2026; under peer review).
 
 ---
 
 ## Repository layout
 
-- `GalaxyPython/` — Core Python implementation of PGAlign (alignment and peak-group functions).
+- `pgalign/` — Core Python implementation of PGAlign (alignment and peak-group functions).
 - `CodeInPaper/` — Scripts that reproduce the figures and results in the manuscript. See `CodeInPaper/README.md`.
-- `Tutorial_GALAXY.ipynb` — A Jupyter notebook that walks through aligning two MALDI datasets (e.g., Week 2 and Week 5 macrophage samples) and preparing them for joint segmentation.
+- `Tutorial_PGAlign.ipynb` — A Jupyter notebook that walks through aligning two MALDI datasets (e.g., Week 2 and Week 5 macrophage samples) and preparing them for joint segmentation.
 - `tests/` — Smoke tests (`pytest`).
 - `CITATION.cff` — Citation metadata.
 - `LICENSE` — MIT license.
@@ -47,11 +47,11 @@ cd PGAlign
 pip install -e .
 ```
 
-The package's importable name is `GalaxyPython`:
+The package's importable name is `pgalign`:
 
 ```python
-import GalaxyPython as gx
-print(gx.__version__)
+import pgalign as pg
+print(pg.__version__)
 ```
 
 ---
@@ -81,30 +81,30 @@ A 120-spectrum / 601-m/z-bin slice of the public mouse pancreas dataset ships
 with the package for tutorials and tests:
 
 ```python
-import GalaxyPython as gx
-unk, ref = gx.datasets.load_mouse_pancreas_toy()
+import pgalign as pg
+unk, ref = pg.datasets.load_mouse_pancreas_toy()
 ```
 
 The "unknown" spectrum has a planted +2-bin rigid shift relative to the
-reference, so GALAXY should recover a shift of about +2 m/z bins.
+reference, so PGAlign should recover a shift of about +2 m/z bins.
 
 ---
 
 ## Quick start
 
-A minimal example is given in `Tutorial_GALAXY.ipynb`. The basic workflow is:
+A minimal example is given in `Tutorial_PGAlign.ipynb`. The basic workflow is:
 
 1. Load two MALDI datasets (e.g., two time points or two tissues) with optional spatial coordinates.
 2. Wrap them as `AnnData` objects (via `scanpy` / `anndata`).
 3. Normalize intensities per spectrum.
-4. Run the four GALAXY steps.
+4. Run the four PGAlign steps.
 5. Extract the aligned spectra for joint downstream analyses (e.g., PCA + Harmony + clustering).
 
 ```python
 import scanpy as sc
-import GalaxyPython as gx
+import pgalign as pg
 
-# X = spectra, var = m/z table, obs = coordinates (see Tutorial_GALAXY.ipynb)
+# X = spectra, var = m/z table, obs = coordinates (see Tutorial_PGAlign.ipynb)
 MALDIdataAnn1 = ...   # unknown spectrum
 MALDIdataAnn2 = ...   # reference spectrum
 
@@ -113,12 +113,12 @@ sc.pp.normalize_per_cell(MALDIdataAnn1)
 sc.pp.normalize_per_cell(MALDIdataAnn2)
 
 # Step 1 + Step 2: peak calling and peak grouping
-PeakGroup = gx.PeakCalling(MALDIdataAnn1, MALDIdataAnn2)
+PeakGroup = pg.PeakCalling(MALDIdataAnn1, MALDIdataAnn2)
 PeakGroup.peak_calling(threshold=0.9)
 PeakGroup.peak_grouping(percentile=0.9)
 
 # Step 3: peak group pairing
-ExactAlign = gx.AnnDataMALDI(MALDIdataAnn1, MALDIdataAnn2)
+ExactAlign = pg.AnnDataMALDI(MALDIdataAnn1, MALDIdataAnn2)
 ExactAlign.get_corr_peakgroup_refined(PeakGroup.jointcluster)
 ExactAlign.peak_group_pairing(criteria=0)
 
@@ -127,7 +127,7 @@ ExactAlign.fine_alignment_assessment(threshold=0.2, ignore=True)
 ExactAlign.summarize()
 ```
 
-Please refer to `Tutorial_GALAXY.ipynb` for a fully worked example with real
+Please refer to `Tutorial_PGAlign.ipynb` for a fully worked example with real
 data and plots.
 
 ---
@@ -156,12 +156,12 @@ subfolder has its own `README.md` with dataset access instructions:
 
 ## Citation
 
-The GALAXY manuscript is currently under peer review. If you use GALAXY in
+The PGAlign manuscript is currently under peer review. If you use PGAlign in
 your research, please cite this repository (see `CITATION.cff`, which GitHub
 renders as a "Cite this repository" button) and contact the corresponding
 author for the latest preprint:
 
-> Deng A, Zhang Y, Zhang Q. *GALAXY: Group Alignment of Mass Spectrometry data
+> Deng A, Zhang Y, Zhang Q. *PGAlign: peak group alignment of mass spectrometry data
 > for imaging and spatial metabolomics*. Manuscript under review, 2026.
 
 ---

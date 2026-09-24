@@ -1,5 +1,5 @@
 # Datasets
 
-Toy datasets bundled with GALAXY for tutorials and tests.
+Toy datasets bundled with PGAlign for tutorials and tests.
 
-::: GalaxyPython.datasets
+::: pgalign.datasets

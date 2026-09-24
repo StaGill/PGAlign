@@ -1,27 +1,27 @@
 # Utilities
 
-Helpers used by GALAXY's peak-calling and alignment routines.
+Helpers used by PGAlign's peak-calling and alignment routines.
 
-::: GalaxyPython.util.gridding
+::: pgalign.util.gridding
 
-::: GalaxyPython.util.GKernal
+::: pgalign.util.GKernal
 
-::: GalaxyPython.util.find_nearest
+::: pgalign.util.find_nearest
 
-::: GalaxyPython.util.in_range_lookup
+::: pgalign.util.in_range_lookup
 
-::: GalaxyPython.util.comp_clusters
+::: pgalign.util.comp_clusters
 
-::: GalaxyPython.util.get_unk_comp_clusters
+::: pgalign.util.get_unk_comp_clusters
 
-::: GalaxyPython.util.group_range
+::: pgalign.util.group_range
 
-::: GalaxyPython.util.save_clusterresults
+::: pgalign.util.save_clusterresults
 
-::: GalaxyPython.util.spectrum_save
+::: pgalign.util.spectrum_save
 
-::: GalaxyPython.util.prefilter_cells
+::: pgalign.util.prefilter_cells
 
-::: GalaxyPython.util.prefilter_genes
+::: pgalign.util.prefilter_genes
 
-::: GalaxyPython.util.prefilter_specialgenes
+::: pgalign.util.prefilter_specialgenes

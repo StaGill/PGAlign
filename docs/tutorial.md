@@ -1,11 +1,11 @@
 # Tutorial
 
 A minimal end-to-end walk-through. For a fully worked example with plots, see
-`Tutorial_GALAXY.ipynb` in the repository root.
+`Tutorial_PGAlign.ipynb` in the repository root.
 
 ## 1. Inputs
 
-GALAXY operates on two `AnnData` objects: the *reference* spectrum and the
+PGAlign operates on two `AnnData` objects: the *reference* spectrum and the
 *unknown* spectrum to be aligned. Each `AnnData.X` is a (spectra &times; m/z bins)
 intensity matrix; `var` carries m/z values as the `"m/z"` column; `obs` holds
 per-pixel coordinates.
@@ -13,8 +13,8 @@ per-pixel coordinates.
 You can use the bundled [toy dataset](toy-data.md) for a quick try-out:
 
 ```python
-import GalaxyPython as gx
-unk, ref = gx.datasets.load_mouse_pancreas_toy()
+import pgalign as pg
+unk, ref = pg.datasets.load_mouse_pancreas_toy()
 ```
 
 ## 2. Per-spectrum normalisation
@@ -28,7 +28,7 @@ sc.pp.normalize_per_cell(ref)
 ## 3. Peak calling and peak grouping (Steps 1 & 2)
 
 ```python
-pc = gx.PeakCalling(unk, ref)
+pc = pg.PeakCalling(unk, ref)
 pc.peak_calling(threshold=0.9)        # Step 1: alpha = 0.9 quantile
 pc.peak_grouping(percentile=0.9)      # Step 2: top 10% inter-peak distance cut
 ```
@@ -38,7 +38,7 @@ pc.peak_grouping(percentile=0.9)      # Step 2: top 10% inter-peak distance cut
 ## 4. Peak group pairing and fine alignment (Steps 3 & 4)
 
 ```python
-align = gx.AnnDataMALDI(unk, ref)
+align = pg.AnnDataMALDI(unk, ref)
 align.get_corr_peakgroup_refined(pc.jointcluster)   # Pearson similarity matrix
 align.peak_group_pairing(criteria=0)                # Step 3: greedy pairing
 align.fine_alignment_assessment(threshold=0.2, ignore=True)  # Step 4: rigid shift

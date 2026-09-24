@@ -1,17 +1,17 @@
-"""End-to-end smoke test for the full GALAXY pipeline."""
+"""End-to-end smoke test for the full PGAlign pipeline."""
 
 import numpy as np
 
-import GalaxyPython as gx
+import pgalign as pg
 
 
 def test_full_pipeline_runs(tiny_anndata):
     unk, ref = tiny_anndata
-    pc = gx.PeakCalling(unk, ref)
+    pc = pg.PeakCalling(unk, ref)
     pc.peak_calling(threshold=0.9)
     pc.peak_grouping(percentile=0.9)
 
-    align = gx.AnnDataMALDI(unk, ref)
+    align = pg.AnnDataMALDI(unk, ref)
     align.get_corr_peakgroup_refined(pc.jointcluster)
     align.peak_group_pairing(criteria=0)
     align.fine_alignment_assessment(threshold=0.0, ignore=True)

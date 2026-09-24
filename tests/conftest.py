@@ -1,4 +1,4 @@
-"""Shared fixtures for GALAXY smoke tests."""
+"""Shared fixtures for PGAlign smoke tests."""
 
 import numpy as np
 import pandas as pd

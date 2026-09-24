@@ -2,20 +2,20 @@
 
 import numpy as np
 
-import GalaxyPython as gx
+import pgalign as pg
 
 
 def test_toy_dataset_round_trip():
-    unk, ref = gx.datasets.load_mouse_pancreas_toy()
+    unk, ref = pg.datasets.load_mouse_pancreas_toy()
     assert unk.shape == ref.shape
     assert "m/z" in unk.var.columns
 
-    pc = gx.PeakCalling(unk, ref)
+    pc = pg.PeakCalling(unk, ref)
     pc.peak_calling(threshold=0.9)
     pc.peak_grouping(percentile=0.9)
     assert len(pc.jointcluster) > 0
 
-    align = gx.AnnDataMALDI(unk, ref)
+    align = pg.AnnDataMALDI(unk, ref)
     align.get_corr_peakgroup_refined(pc.jointcluster)
     align.peak_group_pairing(criteria=0)
     align.fine_alignment_assessment(threshold=0.0, ignore=True)

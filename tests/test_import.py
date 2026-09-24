@@ -1,11 +1,11 @@
 """Import-level smoke checks."""
 
-import GalaxyPython as gx
+import pgalign as pg
 
 
 def test_version_is_string():
-    assert isinstance(gx.__version__, str)
-    assert gx.__version__.count(".") >= 1
+    assert isinstance(pg.__version__, str)
+    assert pg.__version__.count(".") >= 1
 
 
 def test_public_api_present():
@@ -19,12 +19,12 @@ def test_public_api_present():
         "gridding",
         "GKernal",
     ]:
-        assert hasattr(gx, name), f"GalaxyPython is missing public name: {name}"
+        assert hasattr(pg, name), f"pgalign is missing public name: {name}"
 
 
 def test_paper_aligned_methods_exist():
-    """Method names from the current GALAXY manuscript are exposed on the right classes."""
-    assert hasattr(gx.PeakCalling, "peak_calling")
-    assert hasattr(gx.PeakCalling, "peak_grouping")
-    assert hasattr(gx.AnnDataMALDI, "peak_group_pairing")
-    assert hasattr(gx.AnnDataMALDI, "fine_alignment_assessment")
+    """Method names from the current PGAlign manuscript are exposed on the right classes."""
+    assert hasattr(pg.PeakCalling, "peak_calling")
+    assert hasattr(pg.PeakCalling, "peak_grouping")
+    assert hasattr(pg.AnnDataMALDI, "peak_group_pairing")
+    assert hasattr(pg.AnnDataMALDI, "fine_alignment_assessment")

@@ -1,4 +1,4 @@
-"""Utility helpers used by GALAXY's peak-calling and alignment routines."""
+"""Utility helpers used by PGAlign's peak-calling and alignment routines."""
 
 import logging
 import math

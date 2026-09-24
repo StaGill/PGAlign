@@ -12,7 +12,7 @@ islets of Langerhans MALDI, FT-ICR negative mode). The bundled slice covers:
 - Spatial window: 21&times;21 pixels around `(x=1636, y=863)`, subsampled to 120 spectra (seed = 0).
 - m/z range: `[100, 250]` &mdash; 601 bins at 0.25 m/z spacing.
 - The "unknown" companion was created by shifting the reference by +2 m/z bins
-  and applying mild lognormal noise (&sigma; = 0.05), so GALAXY should recover
+  and applying mild lognormal noise (&sigma; = 0.05), so PGAlign should recover
   a per-group shift of about +2.
 
 The slice is stored as a compressed `.npz` (~230 KB) inside the package.
@@ -20,9 +20,9 @@ The slice is stored as a compressed `.npz` (~230 KB) inside the package.
 ## Usage
 
 ```python
-import GalaxyPython as gx
+import pgalign as pg
 
-unk, ref = gx.datasets.load_mouse_pancreas_toy()
+unk, ref = pg.datasets.load_mouse_pancreas_toy()
 
 print(unk.shape, ref.shape)        # (120, 601) (120, 601)
 print(ref.var["m/z"].head())       # 100.0, 100.25, ..., 250.0
@@ -31,15 +31,15 @@ print(ref.var["m/z"].head())       # 100.0, 100.25, ..., 250.0
 ## End-to-end on the toy data
 
 ```python
-import GalaxyPython as gx
+import pgalign as pg
 
-unk, ref = gx.datasets.load_mouse_pancreas_toy()
+unk, ref = pg.datasets.load_mouse_pancreas_toy()
 
-pc = gx.PeakCalling(unk, ref)
+pc = pg.PeakCalling(unk, ref)
 pc.peak_calling(threshold=0.9)
 pc.peak_grouping(percentile=0.9)
 
-align = gx.AnnDataMALDI(unk, ref)
+align = pg.AnnDataMALDI(unk, ref)
 align.get_corr_peakgroup_refined(pc.jointcluster)
 align.peak_group_pairing(criteria=0)
 align.fine_alignment_assessment(threshold=0.0, ignore=True)
@@ -51,4 +51,4 @@ print("recovered mean shift:", float(np.mean(align.changerecord)))  # ~+2
 
 ## API
 
-::: GalaxyPython.datasets.load_mouse_pancreas_toy
+::: pgalign.datasets.load_mouse_pancreas_toy

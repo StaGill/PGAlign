@@ -1,4 +1,4 @@
-"""Group pairing and fine alignment (GALAXY Steps 3 and 4).
+"""Group pairing and fine alignment (PGAlign Steps 3 and 4).
 
 Implements Sections 2.3 (Peak Group Pairing) and 2.4 (Fine Alignment
 Assessment) of Deng, Zhang & Zhang (2026).
@@ -21,7 +21,7 @@ from .util import (
 
 
 class AnnDataMALDI(object):
-    """Orchestrator for GALAXY's pairing and fine-alignment steps.
+    """Orchestrator for PGAlign's pairing and fine-alignment steps.
 
     Parameters
     ----------
@@ -134,7 +134,7 @@ class AnnDataMALDI(object):
         return []
 
     def peak_group_pairing(self, criteria=0):
-        """GALAXY Step 3: greedily pair peak groups based on the similarity matrix.
+        """PGAlign Step 3: greedily pair peak groups based on the similarity matrix.
 
         Operates on ``self.PearsonMatrix`` (computed by ``get_corr_peakgroup_refined``).
         Pairs survive only when the (distance-penalised) Pearson correlation
@@ -163,7 +163,7 @@ class AnnDataMALDI(object):
         return self.peak_group_pairing(criteria=criteria)
 
     def fine_alignment_assessment(self, threshold=0.2, ignore=False, **kwargs):
-        """GALAXY Step 4: rigid-body translation of unknown m/z values per paired group.
+        """PGAlign Step 4: rigid-body translation of unknown m/z values per paired group.
 
         For each paired peak group, find the +/- 4 grid-point offset whose
         diagonal-mean Pearson correlation is maximal; if that maximum exceeds

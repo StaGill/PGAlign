@@ -1,4 +1,4 @@
-# Reproducing the GALAXY manuscript figures
+# Reproducing the PGAlign manuscript figures
 
 This folder contains the notebooks that generate the analyses and figures in
 Deng, Zhang & Zhang (2026). Each subfolder targets one case study.
@@ -11,7 +11,7 @@ Deng, Zhang & Zhang (2026). Each subfolder targets one case study.
 
 ## How to run
 
-1. Install GALAXY from the repository root: `pip install -e .`.
+1. Install PGAlign from the repository root: `pip install -e .`.
 2. Place the input data for the case study you want to run under a local folder
    (e.g. `data/MousePancreate/`, `data/Maaike/`, `data/CanineSarcomas/`).
 3. Open the notebook; the first executable cell is a **CONFIGURE ME** block

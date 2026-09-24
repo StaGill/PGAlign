@@ -1,4 +1,4 @@
-"""Peak calling and peak grouping (GALAXY Steps 1 and 2).
+"""Peak calling and peak grouping (PGAlign Steps 1 and 2).
 
 Implements Sections 2.1 (Peak Calling) and 2.2 (Peak Grouping) of
 Deng, Zhang & Zhang (2026).
@@ -79,7 +79,7 @@ class PeakCalling(object):
         return clusters
 
     def peak_calling(self, threshold=0.9):
-        """GALAXY Step 1: identify peaks in the unknown and reference mean spectra.
+        """PGAlign Step 1: identify peaks in the unknown and reference mean spectra.
 
         Default ``threshold=0.9`` corresponds to the 90% quantile (alpha in the paper).
         """
@@ -105,7 +105,7 @@ class PeakCalling(object):
         return self.peak_calling(threshold=threshold)
 
     def peak_grouping(self, percentile=0.9):
-        """GALAXY Step 2: partition adjacent peaks into joint peak groups.
+        """PGAlign Step 2: partition adjacent peaks into joint peak groups.
 
         Default ``percentile=0.9`` uses the top 10% of pairwise m/z distances
         as cut points (peak grouping parameter in the paper).

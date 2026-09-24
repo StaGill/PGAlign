@@ -1,14 +1,14 @@
 # Maaike — atherosclerosis regression macrophage metabolomics
 
 Reproduces the macrophage metabolomics case study (Section 3.2 of the paper):
-GALAXY aligns Week 5 MALDI spectra to Week 2, with subsequent joint spatial
+PGAlign aligns Week 5 MALDI spectra to Week 2, with subsequent joint spatial
 segmentation and classification.
 
 ## Notebooks
 
 | File                      | Purpose                                                                 |
 |---------------------------|-------------------------------------------------------------------------|
-| `Maaike_figure_a.ipynb`   | Main GALAXY alignment + Pearson correlation matrices + anchor points    |
+| `Maaike_figure_a.ipynb`   | Main PGAlign alignment + Pearson correlation matrices + anchor points    |
 | `MSIWarp.ipynb`           | Comparative analysis with MSIWarp on the same data                      |
 | `Maaike_figure_b.Rmd`     | Spatial visualisation / clustering plots in R                           |
 | `Maaike_figure_c_d.Rmd`   | Additional R-side figures                                               |

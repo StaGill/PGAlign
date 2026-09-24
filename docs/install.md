@@ -1,25 +1,25 @@
 # Installation
 
-GALAXY targets Python &geq; 3.9.
+PGAlign targets Python &geq; 3.9.
 
 ## From source
 
 ```bash
-git clone https://github.com/StaGill/GALAXY.git
-cd GALAXY
+git clone https://github.com/StaGill/PGAlign.git
+cd PGAlign
 pip install -e .
 ```
 
-The installed package's importable name is `GalaxyPython`:
+The installed package's importable name is `pgalign`:
 
 ```python
-import GalaxyPython as gx
-print(gx.__version__)
+import pgalign as pg
+print(pg.__version__)
 ```
 
 ## Dependencies
 
-GALAXY depends on the standard scientific-Python stack plus `scanpy` /
+PGAlign depends on the standard scientific-Python stack plus `scanpy` /
 `anndata` for MALDI data containers:
 
 - `numpy >= 1.20`

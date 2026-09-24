@@ -1,4 +1,4 @@
-"""Toy datasets bundled with GALAXY for tutorials and tests."""
+"""Toy datasets bundled with PGAlign for tutorials and tests."""
 
 from importlib import resources
 
@@ -14,7 +14,7 @@ def load_mouse_pancreas_toy():
     (Zenodo `10.5281/zenodo.3607915`), restricted to the spatial window centred at
     pixel (1636, 863) and the m/z range [100, 250]. A synthetic +2-bin rigid shift
     plus mild lognormal noise was applied to produce the "unknown" companion, so
-    GALAXY should recover a shift of about +2 m/z bins.
+    PGAlign should recover a shift of about +2 m/z bins.
 
     Returns
     -------

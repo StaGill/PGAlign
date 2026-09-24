@@ -1,6 +1,6 @@
 cff-version: 1.2.0
-message: "If you use GALAXY in your research, please cite the accompanying paper."
-title: "GALAXY: Group Alignment of Mass Spectrometry data"
+message: "If you use PGAlign in your research, please cite the accompanying paper."
+title: "PGAlign: peak group alignment of mass spectrometry data"
 type: software
 authors:
   - family-names: Deng
@@ -14,8 +14,8 @@ authors:
     email: qihuang.zhang@mcgill.ca
     affiliation: "Department of Epidemiology, Biostatistics, and Occupational Health, McGill University"
     orcid: "https://orcid.org/0000-0000-0000-0000"
-repository-code: "https://github.com/StaGill/GALAXY"
-url: "https://stagill.github.io/GALAXY/"
+repository-code: "https://github.com/StaGill/PGAlign"
+url: "https://stagill.github.io/PGAlign/"
 keywords:
   - MALDI
   - mass spectrometry
@@ -25,7 +25,7 @@ keywords:
 license: MIT
 preferred-citation:
   type: unpublished
-  title: "GALAXY: Group Alignment of Mass Spectrometry data for imaging and spatial metabolomics"
+  title: "PGAlign: peak group alignment of mass spectrometry data for imaging and spatial metabolomics"
   authors:
     - family-names: Deng
       given-names: Anji

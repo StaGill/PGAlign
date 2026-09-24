@@ -3,4 +3,4 @@ include README.md
 include CITATION.cff
 include pyproject.toml
 recursive-include images *.png *.jpg
-recursive-include GalaxyPython/data *.npz
+recursive-include pgalign/data *.npz

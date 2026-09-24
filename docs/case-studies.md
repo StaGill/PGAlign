@@ -1,7 +1,7 @@
 # Case studies
 
-The notebooks under [`CodeInPaper/`](https://github.com/StaGill/GALAXY/tree/main/CodeInPaper)
-reproduce the analyses in the GALAXY manuscript.
+The notebooks under [`CodeInPaper/`](https://github.com/StaGill/PGAlign/tree/main/CodeInPaper)
+reproduce the analyses in the PGAlign manuscript.
 
 | Subfolder / file                  | Case study                              | Manuscript section             | Dataset access                                                                 |
 |-----------------------------------|-----------------------------------------|--------------------------------|--------------------------------------------------------------------------------|

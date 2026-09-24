@@ -1,4 +1,4 @@
-# PGAlign
+<h1><img src="assets/pgalign_logo.svg#only-light" alt="PGAlign" width="420"><img src="assets/pgalign_logo_dark.svg#only-dark" alt="PGAlign" width="420"></h1>
 
 **Peak-Group Alignment of mass spectrometry data** &mdash; a peak-group-based
 algorithm for aligning mass spectrometry (MS) spectra onto a common m/z grid.

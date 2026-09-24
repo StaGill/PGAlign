@@ -38,8 +38,8 @@ theme:
         name: Switch to light mode
   icon:
     repo: fontawesome/brands/github
-  logo: assets/logo.svg
-  favicon: assets/logo.svg
+  logo: assets/pgalign_icon.svg
+  favicon: assets/favicon.ico
 
 plugins:
   - search

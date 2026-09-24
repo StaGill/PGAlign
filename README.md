@@ -1,6 +1,6 @@
-# GALAXY
+# PGAlign
 
-**GALAXY (Group Alignment of Mass Spectrometry data)** is a peak-group-based
+**PGAlign (Group Alignment of Mass Spectrometry data)** is a peak-group-based
 algorithm for aligning mass spectrometry (MS) spectra onto a common m/z grid.
 It is designed for imaging and spatial metabolomics data such as MALDI-MS,
 where spectra from different runs or tissues often exhibit small m/z shifts
@@ -28,7 +28,7 @@ GALAXY manuscript (Deng, Zhang & Zhang, 2026; under peer review).
 
 ## Repository layout
 
-- `GalaxyPython/` — Core Python implementation of GALAXY (alignment and peak-group functions).
+- `GalaxyPython/` — Core Python implementation of PGAlign (alignment and peak-group functions).
 - `CodeInPaper/` — Scripts that reproduce the figures and results in the manuscript. See `CodeInPaper/README.md`.
 - `Tutorial_GALAXY.ipynb` — A Jupyter notebook that walks through aligning two MALDI datasets (e.g., Week 2 and Week 5 macrophage samples) and preparing them for joint segmentation.
 - `tests/` — Smoke tests (`pytest`).
@@ -42,8 +42,8 @@ GALAXY manuscript (Deng, Zhang & Zhang, 2026; under peer review).
 Clone the repository and install with `pip`:
 
 ```bash
-git clone https://github.com/StaGill/GALAXY.git
-cd GALAXY
+git clone https://github.com/StaGill/PGAlign.git
+cd PGAlign
 pip install -e .
 ```
 

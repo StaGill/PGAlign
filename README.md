@@ -9,9 +9,9 @@ that prevent direct comparison.
 Anji Deng, Yuyang Zhang, and Qihuang Zhang\*
 McGill University — corresponding author: <qihuang.zhang@mcgill.ca>
 
-**Documentation:** <https://stagill.github.io/GALAXY/>
+**Documentation:** <https://stagill.github.io/PGAlign/>
 
-![Overview of the GALAXY workflow](images/galaxy_workflow.png)
+![Overview of the PGAlign workflow](images/galaxy_workflow.png)
 
 By aligning an "unknown" spectrum (or dataset) to a reference while *forcing*
 matched spectra to share the same m/z values, GALAXY enables downstream

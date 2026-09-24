@@ -135,6 +135,22 @@ ExactAlign.summarize()
 Please refer to `Tutorial_PGAlign.ipynb` for a fully worked example with real
 data and plots.
 
+### Flagging ambiguous alignments
+
+A shifted peak group always has one alternative: staying at its original
+position. After Step 4, `flag_ambiguous_alignments` flags a shifted group when
+staying scores within `delta` (default 0.1) of the chosen alignment, using the
+pairing similarity for groups matched to a different reference group and the
+zero-offset diagonal for groups moved by a non-zero offset. Flagged groups are
+reported with both scores, so you can inspect them before downstream analysis.
+
+```python
+ExactAlign.fine_alignment_assessment(threshold=0.2, ignore=True)
+table = ExactAlign.flag_ambiguous_alignments(delta=0.1)
+print(table[table["flagged"]])
+print(f"{table['flagged'].sum()} of {len(table)} shifted groups flagged")
+```
+
 ---
 
 ## Reproducing results from the manuscript

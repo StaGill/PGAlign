@@ -224,6 +224,86 @@ class AnnDataMALDI(object):
         )
         return self.fine_alignment_assessment(threshold=threshould, ignore=ignore)
 
+    def flag_ambiguous_alignments(self, delta=0.1):
+        """Flag shifted peak groups whose original position scores almost as well.
+
+        A shifted peak group has one alternative correspondence, namely to be left
+        at its original position. When unknown group t is paired with a different
+        reference group k, the pair is flagged if the similarity of t to the
+        reference group at its own position is at least the similarity of the
+        selected pair minus ``delta`` (S_tt >= S_kt - delta in the paper; here
+        ``PearsonMatrix[t, t] >= PearsonMatrix[t, k] - delta``, since rows of
+        ``PearsonMatrix`` are unknown groups). When a group is paired at its own
+        position but moved by a non-zero offset, the pair is flagged if the mean
+        correlation on the zero-offset diagonal, D_0, lies within ``delta`` of the
+        maximum diagonal mean. Groups paired at their own position with a zero
+        offset are not shifted and are not reported. An in-place similarity of -1
+        (a window ran outside the spectrum) is not a valid alternative, so such a
+        pair is reported with a missing in-place score and is not flagged.
+
+        Call after ``fine_alignment_assessment``. Only groups accepted there, that
+        is groups with an entry in ``changerecord``, are assessed. The result is
+        also stored on ``self.ambiguity_table``.
+
+        :param delta: tolerance on the similarity scale. Defaults to 0.1.
+        :return: a DataFrame with one row per shifted matched group and columns
+            ``aligned_group`` (position in ``changerecord``), ``unknown_group``,
+            ``reference_group``, ``mz_start`` and ``mz_end`` (reference m/z range),
+            ``offset`` (the ``changerecord`` entry), ``rule`` ("group" for a
+            different reference group, "offset" for a non-zero offset),
+            ``score_selected``, ``score_in_place``, ``margin``
+            (``score_selected - score_in_place``) and ``flagged``.
+        """
+        index_ref = list(self.mz_valueRef.index)
+        mz_ref = np.asarray(self.mz_valueRef["m/z"])
+        rows = []
+        j = 0
+        for i in range(self.align_group.shape[0]):
+            i_unk, i_ref = self.align_group[i, 0], self.align_group[i, 1]
+            headindexint_ref = index_ref.index(self.ref_clusters[i_ref][0])
+            # fine_alignment_assessment appends only accepted groups, in align_group order
+            if j >= len(self.changerecord) or self.aligned_mz_clusters_ref[j][0] != headindexint_ref:
+                continue
+            offset = self.changerecord[j]
+            if i_unk != i_ref:
+                rule = "group"
+                score_selected = self.PearsonMatrix[i_unk, i_ref]
+                score_in_place = self.PearsonMatrix[i_unk, i_unk]
+                if score_in_place == -1:
+                    score_in_place = np.nan
+            elif offset != 0:
+                rule = "offset"
+                submatrix = self.PearsonMatrixFull[(i_unk * 9):(i_unk * 9 + 9), (i_ref * 9):(i_ref * 9 + 9)]
+                diagnallist = [np.nanmean(np.diag(submatrix, k=d)) for d in range(-4, 5)]
+                diagnallist = [-1 if value != value else value for value in diagnallist]  # NaN -> -1
+                score_selected = max(diagnallist)
+                score_in_place = diagnallist[4]
+            else:
+                j += 1
+                continue
+            margin = score_selected - score_in_place
+            rows.append({
+                "aligned_group": j,
+                "unknown_group": int(i_unk),
+                "reference_group": int(i_ref),
+                "mz_start": mz_ref[self.aligned_mz_clusters_ref[j][0]],
+                "mz_end": mz_ref[self.aligned_mz_clusters_ref[j][-1]],
+                "offset": int(offset),
+                "rule": rule,
+                "score_selected": score_selected,
+                "score_in_place": score_in_place,
+                "margin": margin,
+                "flagged": bool(margin <= delta),
+            })
+            j += 1
+        if j != len(self.changerecord):
+            raise ValueError("changerecord does not match align_group; rerun fine_alignment_assessment.")
+        self.ambiguity_table = pd.DataFrame(rows, columns=[
+            "aligned_group", "unknown_group", "reference_group", "mz_start", "mz_end", "offset",
+            "rule", "score_selected", "score_in_place", "margin", "flagged",
+        ])
+        return self.ambiguity_table
+
     def summarize(self):
         """Concatenate paired unknown/reference index arrays into flat alignment vectors."""
         self.unknownalign = np.concatenate(self.aligned_mz_clusters_unk)

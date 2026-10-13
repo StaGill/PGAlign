@@ -51,11 +51,20 @@ After `summarize()`:
 - `align.referenalign` &mdash; corresponding m/z indices in the reference
 - `align.changerecord` &mdash; per-group integer-index shift applied
 
-## 5. Downstream
+## 5. The aligned dataset
 
-With a shared m/z grid, you can stack the aligned matrices and feed them
-into PCA / Harmony / clustering / classification. See
-[Case studies](case-studies.md) for full reproductions of the manuscript's
+```python
+aligned = pg.PGmzalign(align).getAnnSim()
+```
+
+`aligned` holds the unknown spectra on the reference m/z grid. Its
+`var["m/z"]` are the first `aligned.n_vars` m/z values of the reference, so it
+can be stacked with `ref[:, :aligned.n_vars]` and passed to PCA, Harmony,
+clustering or classification. Despite the method's name, nothing is simulated.
+The result is cut to the shorter of the two m/z axes, so it can lack a few bins
+at the top of the range; on the toy data it keeps 599 of the reference's 601.
+
+See [Case studies](case-studies.md) for full reproductions of the manuscript's
 analyses.
 
 ## Notes on terminology

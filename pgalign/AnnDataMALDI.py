@@ -398,6 +398,15 @@ class MALDI_SIM(object):
 
 
 class PGmzalign(MALDI_SIM):
+    """Produce the aligned dataset: the unknown spectra on the reference m/z grid.
+
+    Build it from an ``AnnDataMALDI`` object after ``fine_alignment_assessment``,
+    then call ``getAnnSim()``. Despite the method's name, nothing is simulated;
+    the class reuses the column-shifting machinery of ``MALDI_SIM``.
+
+    :param AnnDataMALDI: an ``AnnDataMALDI`` object that has run Steps 3 and 4.
+    """
+
     def __init__(self, AnnDataMALDI):
         self.unknowndata = AnnDataMALDI.AnnDataUnk.copy()
         self.aligned_mz_clusters_unk = AnnDataMALDI.aligned_mz_clusters_unk.copy()
@@ -444,6 +453,17 @@ class PGmzalign(MALDI_SIM):
         self.shiftdatadf["currentshift_fromorg"] = np.cumsum(shift_resample)
 
     def getAnnSim(self):
+        """Return the aligned unknown spectra as an AnnData on the reference m/z grid.
+
+        Columns of the unknown spectra are deleted, or copies of a neighbouring
+        column inserted, in the gaps between peak groups, so that every matched
+        group lands on the indices of its reference group. ``var["m/z"]`` holds the
+        reference m/z values and ``obs`` the unknown spectra. The result is cut to
+        the shorter of the two m/z axes, so it can lack a few bins at the top of the
+        range (two on the bundled toy data).
+
+        :return: the aligned spectra as an ``anndata.AnnData``.
+        """
         self.SIMULATEdata()
         mz_value = pd.DataFrame(list(self.newmz), index=list(self.newmz)).astype('float')
         mz_value = mz_value.rename(columns={0: "m/z"})

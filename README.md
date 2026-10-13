@@ -131,7 +131,16 @@ ExactAlign.peak_group_pairing(criteria=0)
 # Step 4: fine alignment assessment
 ExactAlign.fine_alignment_assessment(threshold=0.2, ignore=True)
 ExactAlign.summarize()
+
+# The aligned dataset: the unknown spectra on the reference m/z grid
+MALDIdataAnn1_aligned = pg.PGmzalign(ExactAlign).getAnnSim()
 ```
+
+`getAnnSim()` returns the unknown spectra as an `AnnData` whose `var["m/z"]`
+are the reference's m/z values, so it can be analysed jointly with the
+reference. Despite the method's name, nothing is simulated. The result is cut
+to the shorter of the two m/z axes, so it can lack a few bins at the top of the
+range.
 
 Please refer to `Tutorial_PGAlign.ipynb` for a fully worked example with real
 data and plots.

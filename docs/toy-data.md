@@ -50,6 +50,9 @@ align.summarize()
 
 import numpy as np
 print("recovered mean shift:", float(np.mean(align.changerecord)))  # ~+2
+
+aligned = pg.PGmzalign(align).getAnnSim()   # unknown spectra on the reference m/z grid
+print(aligned.shape)                        # (120, 599): two bins lost at the top
 ```
 
 ## API

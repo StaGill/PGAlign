@@ -82,8 +82,9 @@ The pre-2026 method names (`callpeak`, `grouppeaks`, `greedy_match`,
 
 ## Toy data
 
-A 120-spectrum / 601-m/z-bin slice of the public mouse pancreas dataset ships
-with the package for tutorials and tests:
+A 120-spectrum / 601-m/z-bin slice of the public mouse pancreas dataset
+(Prade et al., 2020, Zenodo 10.5281/zenodo.3607915, CC BY 4.0) ships with the
+package for tutorials and tests:
 
 ```python
 import pgalign as pg

@@ -11,10 +11,11 @@ def load_mouse_pancreas_toy():
     """Return two AnnData objects (unknown, reference) from a downsampled mouse-pancreas MALDI slice.
 
     The data is a 120-spectrum, 601-bin slice of the public mouse pancreas dataset
-    (Zenodo `10.5281/zenodo.3607915`), restricted to the spatial window centred at
-    pixel (1636, 863) and the m/z range [100, 250]. A synthetic +2-bin rigid shift
-    plus mild lognormal noise was applied to produce the "unknown" companion, so
-    PGAlign should recover a shift of about +2 m/z bins.
+    (Zenodo `10.5281/zenodo.3607915`, Prade et al., 2020, CC BY 4.0), drawn from the
+    21 x 21 pixel window centred at (1636, 863) and the m/z range [100, 250] on a
+    0.25 m/z grid. The "unknown" companion is the same spectra shifted two bins higher
+    in m/z, with multiplicative lognormal noise (sigma 0.05), so PGAlign should recover
+    a shift of +2 bins. ``scripts/make_toy_data.py`` in the repository rebuilds it.
 
     Returns
     -------

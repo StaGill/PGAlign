@@ -55,6 +55,7 @@ site/
 
 # Data and outputs (users provide their own)
 data/
+!pgalign/data/
 output_*/
 *.h5ad
 *.imzML

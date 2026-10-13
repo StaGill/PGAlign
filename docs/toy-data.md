@@ -6,16 +6,19 @@ dataset, useful for quick try-outs and for the test suite.
 ## Source
 
 Sliced from the Zenodo deposit
-[`10.5281/zenodo.3607915`](https://doi.org/10.5281/zenodo.3607915) (Mouse
-islets of Langerhans MALDI, FT-ICR negative mode). The bundled slice covers:
+[`10.5281/zenodo.3607915`](https://doi.org/10.5281/zenodo.3607915) (MALDI FTICR
+MS imaging data of pancreatic mouse tissue; Prade et al., 2020; CC BY 4.0), after
+gridding to 0.25 m/z in `CodeInPaper/MousePancreate.ipynb`. The bundled slice covers:
 
-- Spatial window: 21&times;21 pixels around `(x=1636, y=863)`, subsampled to 120 spectra (seed = 0).
-- m/z range: `[100, 250]` &mdash; 601 bins at 0.25 m/z spacing.
-- The "unknown" companion was created by shifting the reference by +2 m/z bins
-  and applying mild lognormal noise (&sigma; = 0.05), so PGAlign should recover
-  a per-group shift of about +2.
+- Spatial window: 120 spectra drawn without replacement (seed 0) from the 21&times;21 pixels around `(x=1636, y=863)`.
+- m/z range: `[100, 250]`, 601 bins at 0.25 m/z spacing.
+- The "unknown" companion reads every spectrum two bins lower in m/z, so each
+  peak sits two bins (0.5 m/z) higher than in the reference, and multiplies it
+  by lognormal noise (&sigma; = 0.05, about &plusmn;5%). PGAlign should recover
+  a per-group shift of +2.
 
 The slice is stored as a compressed `.npz` (~230 KB) inside the package.
+`scripts/make_toy_data.py` rebuilds it from the gridded source file.
 
 ## Usage
 

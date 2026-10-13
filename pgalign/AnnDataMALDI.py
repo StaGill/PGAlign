@@ -83,7 +83,7 @@ class AnnDataMALDI(object):
             for i_ref in range(max(i_unk - 2, 0), min(i_unk + 3, self.nclusters)):
                 midindexint = list(self.mz_valueUnk.index).index(self.midpoints_unk[i_unk])
                 headindexint_ref = list(self.mz_valueRef.index).index(self.ref_clusters[i_ref][0])
-                mzdiff = self.mz_valueUnk["m/z"][midindexint] - self.mz_valueRef["m/z"][
+                mzdiff = self.mz_valueUnk["m/z"].iloc[midindexint] - self.mz_valueRef["m/z"].iloc[
                     list(self.mz_valueRef.index).index(self.ref_clusters[i_ref][len(self.ref_clusters[i_ref]) // 2])
                 ]
                 Pearson_Record = -2
@@ -321,8 +321,8 @@ class MALDI_SIM(object):
         self.mz_valueRef = self.origindata.var.copy()
         shiftdata = np.zeros((len(self.aligned_mz_clusters_ref), 3))
         for i in tqdm(range(len(self.aligned_mz_clusters_ref))):
-            shiftdata[i, 0] = self.mz_valueRef["m/z"][self.aligned_mz_clusters_ref[i]][0]
-            shiftdata[i, 1] = self.mz_valueRef["m/z"][self.aligned_mz_clusters_ref[i]][-1]
+            shiftdata[i, 0] = self.mz_valueRef["m/z"].iloc[self.aligned_mz_clusters_ref[i][0]]
+            shiftdata[i, 1] = self.mz_valueRef["m/z"].iloc[self.aligned_mz_clusters_ref[i][-1]]
             shiftdata[i, 2] = self.changerecord[i]
         shiftdatadf = pd.DataFrame(shiftdata)
         shiftdatadf = shiftdatadf.rename(columns={0: 'mzvalue_start', 1: 'mzvalue_end', 2: 'shift_fromorigin'})
@@ -407,8 +407,8 @@ class PGmzalign(MALDI_SIM):
         self.mz_valueRef = self.origindata.var.copy()
         shiftdata = np.zeros((len(self.aligned_mz_clusters_ref), 4))
         for i in tqdm(range(len(self.aligned_mz_clusters_ref))):
-            shiftdata[i, 0] = self.mz_valueRef["m/z"][self.aligned_mz_clusters_ref[i]][0]
-            shiftdata[i, 1] = self.mz_valueRef["m/z"][self.aligned_mz_clusters_ref[i]][-1]
+            shiftdata[i, 0] = self.mz_valueRef["m/z"].iloc[self.aligned_mz_clusters_ref[i][0]]
+            shiftdata[i, 1] = self.mz_valueRef["m/z"].iloc[self.aligned_mz_clusters_ref[i][-1]]
             shiftdata[i, 2] = self.changerecord[i]
             shiftdata[i, 3] = self.aligned_mz_clusters_ref[i][0] - self.aligned_mz_clusters_unk[i][0]
         shiftdatadf = pd.DataFrame(shiftdata)

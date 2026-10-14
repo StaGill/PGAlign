@@ -47,9 +47,9 @@ align.summarize()
 
 After `summarize()`:
 
-- `align.unknownalign` &mdash; aligned m/z indices in the unknown spectrum
-- `align.referenalign` &mdash; corresponding m/z indices in the reference
-- `align.changerecord` &mdash; per-group integer-index shift applied
+- `align.unknownalign`: aligned m/z indices in the unknown spectrum
+- `align.referenalign`: corresponding m/z indices in the reference
+- `align.changerecord`: per-group integer-index shift applied
 
 ## 5. The aligned dataset
 

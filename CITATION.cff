@@ -13,7 +13,7 @@ authors:
     given-names: Qihuang
     email: qihuang.zhang@mcgill.ca
     affiliation: "Department of Epidemiology, Biostatistics, and Occupational Health, McGill University"
-    orcid: "https://orcid.org/0000-0000-0000-0000"
+    orcid: "https://orcid.org/0000-0003-1455-2159"
 repository-code: "https://github.com/StaGill/PGAlign"
 url: "https://stagill.github.io/PGAlign/"
 keywords:
@@ -25,7 +25,7 @@ keywords:
 license: MIT
 preferred-citation:
   type: unpublished
-  title: "PGAlign: peak group alignment of mass spectrometry data for imaging and spatial metabolomics"
+  title: "PGAlign: peak group alignment of mass spectrometry data"
   authors:
     - family-names: Deng
       given-names: Anji
@@ -35,4 +35,4 @@ preferred-citation:
       given-names: Qihuang
       email: qihuang.zhang@mcgill.ca
   year: 2026
-  notes: "Manuscript under peer review. Please contact the corresponding author for the current preprint."
+  notes: "Under review at the Journal of Proteome Research. Please contact the corresponding author for the current preprint."

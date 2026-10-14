@@ -1,6 +1,7 @@
-# Maaike — atherosclerosis regression macrophage metabolomics
+# Maaike: atherosclerosis regression macrophage metabolomics
 
-Reproduces the macrophage metabolomics case study (Section 3.2 of the paper):
+Reproduces the macrophage metabolomics case study (Results subsection
+"Application of PGAlign to MALDI data from an atherosclerosis regression model"):
 PGAlign aligns Week 5 MALDI spectra to Week 2, with subsequent joint spatial
 segmentation and classification.
 
@@ -17,8 +18,9 @@ segmentation and classification.
 
 The MALDI data come from the atherosclerosis regression mouse model
 (macrophage metabolomics, DHB positive and 9AA negative ionisation modes).
-**The data are available from the data owners upon reasonable request** —
-they are not redistributed in this repository.
+The mean spectra of both time points are on Zenodo (<https://zenodo.org/records/20533948>).
+**The per-spot spectra that the notebooks read are available from the data
+owners upon reasonable request**; they are not redistributed in this repository.
 
 Each notebook expects four CSV files per time point (Week 2 and Week 5)
 named according to the original convention:

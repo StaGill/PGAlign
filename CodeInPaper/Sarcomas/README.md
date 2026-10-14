@@ -1,6 +1,6 @@
-# Canine sarcomas — alignment and classification
+# Canine sarcomas: alignment and classification
 
-Reproduces the canine sarcoma case study (Section 3.3 of the paper). PGAlign
+Reproduces the canine sarcoma case study (Results subsection "Exploration of the ability to preserve the biological difference in dog sarcoma tumor data"). PGAlign
 aligns cancer-tissue spectra (samples Ds1–Ds4, Ds18–Ds20, Ds24) to a normal
 tissue reference (Ds26); classification performance is then evaluated before
 and after alignment, alongside joint clustering across cancer samples.

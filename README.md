@@ -12,7 +12,7 @@ where spectra from different runs or tissues often exhibit small m/z shifts
 that prevent direct comparison.
 
 Anji Deng, Yuyang Zhang, and Qihuang Zhang\*
-McGill University — corresponding author: <qihuang.zhang@mcgill.ca>
+McGill University (corresponding author: <qihuang.zhang@mcgill.ca>)
 
 **Documentation:** <https://stagill.github.io/PGAlign/>
 
@@ -33,12 +33,12 @@ PGAlign manuscript (Deng, Zhang & Zhang, 2026; under peer review).
 
 ## Repository layout
 
-- `pgalign/` — Core Python implementation of PGAlign (alignment and peak-group functions).
-- `CodeInPaper/` — Scripts that reproduce the figures and results in the manuscript. See `CodeInPaper/README.md`.
-- `Tutorial_PGAlign.ipynb` — A Jupyter notebook that walks through aligning two MALDI datasets (e.g., Week 2 and Week 5 macrophage samples) and preparing them for joint segmentation.
-- `tests/` — Smoke tests (`pytest`).
-- `CITATION.cff` — Citation metadata.
-- `LICENSE` — MIT license.
+- `pgalign/`: Core Python implementation of PGAlign (alignment and peak-group functions).
+- `CodeInPaper/`: Scripts that reproduce the figures and results in the manuscript. See `CodeInPaper/README.md`.
+- `Tutorial_PGAlign.ipynb`: A Jupyter notebook that walks through aligning two MALDI datasets (e.g., Week 2 and Week 5 macrophage samples) and preparing them for joint segmentation.
+- `tests/`: Smoke tests (`pytest`).
+- `CITATION.cff`: Citation metadata.
+- `LICENSE`: MIT license.
 
 ---
 
@@ -73,7 +73,7 @@ The four-step pipeline in the paper maps to the following public methods:
 | 4    | Fine Alignment Assessment   | `AnnDataMALDI.fine_alignment_assessment(threshold=0.2)` |
 
 Similarity is measured with Pearson's correlation; Step 3 uses a sliding
-window of +/- 4 m/z units (see Methods of the paper).
+window of +/- 4 grid points (see Methods of the paper).
 
 The pre-2026 method names (`callpeak`, `grouppeaks`, `greedy_match`,
 `fine_align`) are kept as deprecated aliases and emit `DeprecationWarning`.
@@ -159,7 +159,12 @@ ExactAlign.fine_alignment_assessment(threshold=0.2, ignore=True)
 table = ExactAlign.flag_ambiguous_alignments(delta=0.1)
 print(table[table["flagged"]])
 print(f"{table['flagged'].sum()} of {len(table)} shifted groups flagged")
+print(table.groupby("rule")["flagged"].agg(["sum", "size"]))
 ```
+
+The `rule` column says which comparison a row was assessed by: `"group"` for
+a group paired with a different reference group, `"offset"` for a group
+paired at its own position but moved by a non-zero offset.
 
 ---
 
@@ -168,20 +173,21 @@ print(f"{table['flagged'].sum()} of {len(table)} shifted groups flagged")
 The notebooks under `CodeInPaper/` reproduce the main analyses. Each
 subfolder has its own `README.md` with dataset access instructions:
 
-- **Simulation study (mouse pancreas MALDI)** — alignment error under
+- **Simulation study (mouse pancreas MALDI)**: alignment error under
   controlled peak shifts and noise. See `CodeInPaper/MousePancreate.ipynb`.
-- **Macrophage metabolomics (atherosclerosis regression)** — aligns Week 5
+- **Macrophage metabolomics (atherosclerosis regression)**: aligns Week 5
   MALDI spectra to Week 2 and performs joint spatial segmentation. See
   `CodeInPaper/Maaike/`.
-- **Canine sarcoma classification** — aligns cancer tissue spectra to normal
+- **Canine sarcoma classification**: aligns cancer tissue spectra to normal
   tissue and assesses classification performance before/after alignment. See
   `CodeInPaper/Sarcomas/`.
 
 **Data sources:**
 
 - Mouse pancreas MALDI: <https://doi.org/10.5281/zenodo.3607915>
-- Atherosclerosis regression MALDI: available from the data owners upon reasonable request.
-- Canine carcinoma MALDI: ProteomeXchange PRIDE accession `PXD010990` (<https://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=PXD010990>).
+- Atherosclerosis regression MALDI: mean spectra on Zenodo (<https://zenodo.org/records/20533948>); the per-spot
+  spectra that the notebooks read are available from the data owners upon reasonable request.
+- Canine sarcoma MALDI: ProteomeXchange PRIDE accession `PXD010990` (<https://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=PXD010990>).
 
 ---
 
@@ -192,11 +198,11 @@ your research, please cite this repository (see `CITATION.cff`, which GitHub
 renders as a "Cite this repository" button) and contact the corresponding
 author for the latest preprint:
 
-> Deng A, Zhang Y, Zhang Q. *PGAlign: peak group alignment of mass spectrometry data
-> for imaging and spatial metabolomics*. Manuscript under review, 2026.
+> Deng A, Zhang Y, Zhang Q. *PGAlign: peak group alignment of mass spectrometry data*.
+> Under review at the *Journal of Proteome Research*, 2026.
 
 ---
 
 ## License
 
-MIT — see `LICENSE`.
+MIT (see `LICENSE`).

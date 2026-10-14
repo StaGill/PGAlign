@@ -1,7 +1,7 @@
 """Peak calling and peak grouping (PGAlign Steps 1 and 2).
 
-Implements Sections 2.1 (Peak Calling) and 2.2 (Peak Grouping) of
-Deng, Zhang & Zhang (2026).
+Implements the "Peak calling" and "Peak grouping: a greedy algorithm"
+subsections of the Methods in Deng, Zhang & Zhang (2026).
 """
 
 import warnings

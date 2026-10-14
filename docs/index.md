@@ -1,6 +1,6 @@
 <h1><img src="assets/pgalign_logo.svg#only-light" alt="PGAlign" width="420"><img src="assets/pgalign_logo_dark.svg#only-dark" alt="PGAlign" width="420"></h1>
 
-**Peak-Group Alignment of mass spectrometry data** &mdash; a peak-group-based
+**Peak-Group Alignment of mass spectrometry data**: a peak-group-based
 algorithm for aligning mass spectrometry (MS) spectra onto a common m/z grid.
 
 PGAlign is designed for imaging and spatial metabolomics data such as MALDI-MS,
@@ -24,7 +24,7 @@ while forcing matched spectra to share m/z values, PGAlign enables:
 | 4    | Fine Alignment Assessment   | `AnnDataMALDI.fine_alignment_assessment(threshold=0.2)`  |
 
 Similarity is measured with Pearson's correlation; Step 3 uses a sliding window
-of &plusmn;4 m/z units. See [Tutorial](tutorial.md) for an end-to-end walk-through.
+of &plusmn;4 grid points. See [Tutorial](tutorial.md) for an end-to-end walk-through.
 
 ## Next steps
 

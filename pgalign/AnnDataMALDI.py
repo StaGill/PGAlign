@@ -1,7 +1,7 @@
 """Group pairing and fine alignment (PGAlign Steps 3 and 4).
 
-Implements Sections 2.3 (Peak Group Pairing) and 2.4 (Fine Alignment
-Assessment) of Deng, Zhang & Zhang (2026).
+Implements the "Peak group pairing" and "Fine alignment assessment"
+subsections of the Methods in Deng, Zhang & Zhang (2026).
 """
 
 import random
@@ -64,7 +64,7 @@ class AnnDataMALDI(object):
         Uses Pearson's correlation with a sliding-window refinement of +/- 4 grid
         points, that is four spacings of the m/z grid rather than an m/z interval of
         four, so the physical width of the search scales with the gridding increment
-        (Section 2.3 of the paper).
+        (Methods, "Peak group pairing").
 
         Rows of the returned matrix are indexed by unknown peak groups and columns by
         reference peak groups. The matrix is square but is not symmetric, because the
@@ -231,7 +231,7 @@ class AnnDataMALDI(object):
         at its original position. When unknown group t is paired with a different
         reference group k, the pair is flagged if the similarity of t to the
         reference group at its own position is at least the similarity of the
-        selected pair minus ``delta`` (S_tt >= S_kt - delta in the paper; here
+        selected pair minus ``delta`` (S_tt >= S_kt - tau in the paper; here
         ``PearsonMatrix[t, t] >= PearsonMatrix[t, k] - delta``, since rows of
         ``PearsonMatrix`` are unknown groups). When a group is paired at its own
         position but moved by a non-zero offset, the pair is flagged if the mean

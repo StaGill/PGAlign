@@ -3,11 +3,11 @@
 This folder contains the notebooks that generate the analyses and figures in
 Deng, Zhang & Zhang (2026). Each subfolder targets one case study.
 
-| Subfolder / file                  | Case study                                    | Manuscript section             | Dataset access                                                                 |
+| Subfolder / file                  | Case study                                    | Results subsection             | Dataset access                                                                 |
 |-----------------------------------|-----------------------------------------------|--------------------------------|--------------------------------------------------------------------------------|
-| `MousePancreate.ipynb`            | Simulation study on mouse pancreas MALDI      | Section 3.1 (Simulation study) | Zenodo: <https://doi.org/10.5281/zenodo.3607915>                               |
-| `Maaike/`                         | Atherosclerosis regression (macrophages)      | Section 3.2 (Macrophage metabolomics) | Available from the data owners upon reasonable request                         |
-| `Sarcomas/`                       | Canine sarcoma classification                  | Section 3.3 (Canine sarcomas)  | ProteomeXchange PRIDE accession `PXD010990`                                    |
+| `MousePancreate.ipynb`            | Simulation study on mouse pancreas MALDI      | Simulation studies with mass spectrometry imaging data of mouse pancreatic tissue | Zenodo: <https://doi.org/10.5281/zenodo.3607915>                               |
+| `Maaike/`                         | Atherosclerosis regression (macrophages)      | Application of PGAlign to MALDI data from an atherosclerosis regression model | Mean spectra on Zenodo: <https://zenodo.org/records/20533948>; per-spot spectra from the data owners upon reasonable request |
+| `Sarcomas/`                       | Canine sarcoma classification                  | Exploration of the ability to preserve the biological difference in dog sarcoma tumor data | ProteomeXchange PRIDE accession `PXD010990`                                    |
 
 ## How to run
 

@@ -2,6 +2,12 @@
 
 PGAlign targets Python &geq; 3.9.
 
+## From PyPI
+
+```bash
+pip install pgalign
+```
+
 ## From source
 
 ```bash

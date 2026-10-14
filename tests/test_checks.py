@@ -30,6 +30,12 @@ def _with_nan(adata):
     return adata
 
 
+def _flat(adata):
+    adata = adata.copy()
+    adata.X = np.zeros(adata.shape)
+    return adata
+
+
 def _moved(adata):
     adata = adata.copy()
     adata.var["m/z"] = adata.var["m/z"] + 1000
@@ -41,6 +47,7 @@ def _moved(adata):
     (_descending, "must be strictly increasing"),
     (_with_nan, "1 missing or infinite intensities"),
     (_moved, "m/z ranges do not overlap"),
+    (_flat, "carries no signal"),
 ])
 def test_unusable_input_raises_with_the_fix(toy, damage, message):
     unk, ref = toy

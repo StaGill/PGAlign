@@ -11,7 +11,7 @@ The four pipeline steps in the paper map to these public objects:
 align() runs all four with the manuscript's defaults and returns the aligned dataset.
 """
 
-__version__ = "1.0.1"
+__version__ = "1.1.0"
 
 from .util import (
     prefilter_cells,
@@ -43,8 +43,10 @@ from .pipeline import (
     align,
 )
 from .readers import (
+    read_h5ad,
     read_imzml,
     read_scils_csv,
+    write_h5ad,
 )
 from . import datasets
 
@@ -53,9 +55,11 @@ __all__ = [
     # One-call pipeline
     "align",
     "AlignmentResult",
-    # Readers
+    # Readers and .h5ad I/O
     "read_imzml",
     "read_scils_csv",
+    "read_h5ad",
+    "write_h5ad",
     # AnnDataMALDI core
     "AnnDataMALDI",
     "MALDI_SIM",

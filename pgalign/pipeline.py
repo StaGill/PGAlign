@@ -14,9 +14,11 @@ def _check_inputs(unk, ref):
     ranges = []
     for name, adata in (("unk", unk), ("ref", ref)):
         if "m/z" not in adata.var.columns:
+            hint = ("; a file saved with pg.write_h5ad stores them as 'mz', so read it with "
+                    "pg.read_h5ad") if "mz" in adata.var.columns else ""
             raise ValueError(
                 f"{name}.var has no 'm/z' column (columns: {list(adata.var.columns)}); "
-                f"store the m/z values as {name}.var['m/z']"
+                f"store the m/z values as {name}.var['m/z']{hint}"
             )
         mz = adata.var["m/z"].to_numpy(dtype=float)
         if not np.isfinite(mz).all():
@@ -32,6 +34,12 @@ def _check_inputs(unk, ref):
             raise ValueError(
                 f"{name}.X contains {n_bad} missing or infinite intensities; "
                 "replace them, for example with 0"
+            )
+        mean = np.asarray(adata.X.mean(axis=0)).ravel()
+        if np.ptp(mean) == 0:
+            raise ValueError(
+                f"{name} carries no signal: its mean spectrum is constant at {mean[0]:g}, "
+                "so no peaks can be called"
             )
         ranges.append((mz[0], mz[-1]))
     (unk_lo, unk_hi), (ref_lo, ref_hi) = ranges

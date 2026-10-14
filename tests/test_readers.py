@@ -1,5 +1,6 @@
 """Readers for SCiLS CSV exports and imzML files, on the bundled toy slice."""
 
+import anndata as ad
 import numpy as np
 import pandas as pd
 import pytest
@@ -71,9 +72,33 @@ def test_read_imzml_processed_needs_and_uses_a_grid(toy, tmp_path):
     _write_imzml(tmp_path / "toy.imzML", unk, "processed", drop_last_bin_of_first=True)
     with pytest.raises(ValueError, match="pass increment="):
         pg.read_imzml(tmp_path / "toy.imzML")
+    with pytest.raises(ValueError, match="falls inside mz_range"):
+        pg.read_imzml(tmp_path / "toy.imzML", increment=0.25, mz_range=(1100, 1250))
     adata = pg.read_imzml(tmp_path / "toy.imzML", increment=0.25, mz_range=(100, 250.25))
     np.testing.assert_array_equal(adata.var["m/z"].to_numpy(), unk.var["m/z"].to_numpy(dtype=float))
     X = np.asarray(unk.X)
     # each grid point carries a recorded value, so gridding returns it; only the dropped bin is filled in
     np.testing.assert_allclose(np.asarray(adata.X)[1:], X[1:], rtol=1e-12, atol=1e-12)
     np.testing.assert_allclose(np.asarray(adata.X)[0, :-1], X[0, :-1], rtol=1e-12, atol=1e-12)
+
+
+def test_h5ad_round_trip_stores_mz(toy, tmp_path):
+    unk, ref = toy
+    pg.write_h5ad(unk, tmp_path / "unk.h5ad")
+    assert "m/z" in unk.var.columns
+    assert list(ad.read_h5ad(tmp_path / "unk.h5ad").var.columns) == ["mz"]
+    back = pg.read_h5ad(tmp_path / "unk.h5ad")
+    np.testing.assert_array_equal(back.var["m/z"].to_numpy(), unk.var["m/z"].to_numpy())
+    np.testing.assert_array_equal(np.asarray(back.X), np.asarray(unk.X))
+    np.testing.assert_array_equal(back.obs["x"].to_numpy(), unk.obs["x"].to_numpy())
+    with pytest.raises(ValueError, match="read it with pg.read_h5ad"):
+        pg.align(ad.read_h5ad(tmp_path / "unk.h5ad"), ref)
+
+
+def test_read_h5ad_keeps_a_stored_m_z_column(tmp_path):
+    adata = ad.AnnData(X=np.ones((2, 3)), var=pd.DataFrame({"m/z": [1.0, 2.0, 3.0]}, index=["1", "2", "3"]))
+    try:
+        adata.write_h5ad(tmp_path / "old.h5ad")
+    except Exception:
+        pytest.skip("this anndata cannot write a column named m/z, as anndata 0.13 cannot")
+    assert list(pg.read_h5ad(tmp_path / "old.h5ad").var.columns) == ["m/z"]

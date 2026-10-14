@@ -49,6 +49,8 @@ res.ambiguity               # shifted groups and the score of leaving them in pl
 they can be stacked and passed to PCA, Harmony, clustering or classification.
 They are cut to the shorter of the two m/z axes, so they can lack a few bins at
 the top of the range; on the toy data they keep 599 of the reference's 601.
+Save them with `pg.write_h5ad(aligned, "aligned.h5ad")`: anndata 0.13 and later cannot write a column named `m/z`, so `pg.write_h5ad` stores
+it as `mz` and `pg.read_h5ad` restores it.
 
 `res.shifts` gives, for each paired peak group, the reference m/z range it
 occupies and its offset in grid points. `res.ambiguity` lists every shifted

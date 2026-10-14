@@ -82,6 +82,7 @@ nav:
   - Install: install.md
   - Tutorial: tutorial.md
   - Toy data: toy-data.md
+  - Command line: cli.md
   - API reference:
       - align: api/pipeline.md
       - Readers: api/readers.md

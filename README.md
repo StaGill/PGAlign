@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="images/pgalign_logo_dark.svg">
-    <img src="images/pgalign_logo.svg" alt="PGAlign" width="420">
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/StaGill/PGAlign/main/images/pgalign_logo_dark.svg">
+    <img src="https://raw.githubusercontent.com/StaGill/PGAlign/main/images/pgalign_logo.svg" alt="PGAlign" width="420">
   </picture>
 </p>
 
@@ -9,7 +9,7 @@
   <a href="https://github.com/StaGill/PGAlign/actions/workflows/tests.yml"><img src="https://github.com/StaGill/PGAlign/actions/workflows/tests.yml/badge.svg?branch=main" alt="tests"></a>
   <a href="https://stagill.github.io/PGAlign/"><img src="https://github.com/StaGill/PGAlign/actions/workflows/docs.yml/badge.svg?branch=main" alt="docs"></a>
   <a href="https://github.com/StaGill/PGAlign/releases"><img src="https://img.shields.io/github/v/release/StaGill/PGAlign" alt="release"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/StaGill/PGAlign" alt="license"></a>
+  <a href="https://github.com/StaGill/PGAlign/blob/main/LICENSE"><img src="https://img.shields.io/github/license/StaGill/PGAlign" alt="license"></a>
 </p>
 
 **PGAlign (Peak-Group Alignment of mass spectrometry data)** is a peak-group-based
@@ -23,7 +23,7 @@ McGill University (corresponding author: <qihuang.zhang@mcgill.ca>)
 
 **Documentation:** <https://stagill.github.io/PGAlign/>
 
-![Overview of the PGAlign workflow](images/pgalign_workflow.png)
+![Overview of the PGAlign workflow](https://raw.githubusercontent.com/StaGill/PGAlign/main/images/pgalign_workflow.png)
 
 By aligning an "unknown" spectrum (or dataset) to a reference while *forcing*
 matched spectra to share the same m/z values, PGAlign enables downstream
@@ -51,7 +51,11 @@ PGAlign manuscript (Deng, Zhang & Zhang, 2026; under peer review).
 
 ## Installation
 
-Clone the repository and install with `pip`:
+```bash
+pip install pgalign            # or "pgalign[imzml]" to read imzML files
+```
+
+To work from the source, clone the repository and install it with `pip`:
 
 ```bash
 git clone https://github.com/StaGill/PGAlign.git
@@ -113,8 +117,25 @@ ref = pg.read_imzml("reference.imzML", increment=0.25)
 
 `pg.read_imzml` reads continuous imzML as it is and puts processed imzML, where
 each spectrum carries its own m/z values, on a common grid. `pg.read_scils_csv`
-reads SCiLS Lab CSV exports, and `.h5ad` files load with `scanpy.read_h5ad`.
-Each gives an `AnnData` with the m/z values in `var["m/z"]`, ready for `pg.align`.
+reads SCiLS Lab CSV exports, and `pg.read_h5ad` reads `.h5ad` files. Each gives an
+`AnnData` with the m/z values in `var["m/z"]`, ready for `pg.align`. Save results
+with `pg.write_h5ad(res.aligned, "aligned.h5ad")`: anndata 0.13 and later cannot write a column named `m/z`, so `pg.write_h5ad` stores
+it as `mz` and `pg.read_h5ad` restores it.
+
+---
+
+## Command line
+
+```bash
+pgalign align unknown.imzML reference.imzML -o aligned.h5ad --increment 0.25
+```
+
+This prints the summary line and writes the aligned unknown spectra to
+`aligned.h5ad`, the reference on the same bins to `aligned_reference.h5ad`, and
+the two tables to `aligned_shifts.csv` and `aligned_ambiguity.csv`; read the
+`.h5ad` files back with `pg.read_h5ad`. Inputs can be
+`.imzML`, `.h5ad` or SCiLS `.csv` exports. `pgalign align --help` lists the
+options, which mirror those of `pg.align`.
 
 ---
 
@@ -132,7 +153,7 @@ aligned = res.aligned    # the unknown spectra on the reference m/z grid
 `pg.align` normalizes each spectrum, runs the four steps with the manuscript's
 defaults and returns the aligned dataset with two tables: `res.shifts`, one row
 per paired peak group with its offset, and `res.ambiguity`, the diagnostic
-described under [Flagging ambiguous alignments](#flagging-ambiguous-alignments).
+described under [Flagging ambiguous alignments](https://github.com/StaGill/PGAlign#flagging-ambiguous-alignments).
 By default it calls peaks on the three-point moving average described in the
 Methods; pass `smooth=False` for the peak caller used in the simulation study
 and the canine sarcoma analysis. The inputs are not modified.

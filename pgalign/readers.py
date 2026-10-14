@@ -1,4 +1,4 @@
-"""Readers that turn MSI exports into AnnData objects for :func:`pgalign.align`."""
+"""Readers that turn MSI exports into AnnData objects for :func:`pgalign.align`, and .h5ad I/O."""
 
 import math
 
@@ -45,10 +45,15 @@ def read_imzml(path, increment=None, mz_range=None, epsilon=0.025):
             )
         X = np.vstack([np.asarray(intensities, dtype=float) for _, intensities in spectra])
     else:
+        observed = [mzs for mzs, _ in spectra if len(mzs)]
+        lo, hi = min(m.min() for m in observed), max(m.max() for m in observed)
         if mz_range is None:
-            observed = [mzs for mzs, _ in spectra if len(mzs)]
-            mz_range = (math.floor(min(m.min() for m in observed)) - 1,
-                        math.ceil(max(m.max() for m in observed)) + 1)
+            mz_range = (math.floor(lo) - 1, math.ceil(hi) + 1)
+        elif mz_range[0] > hi or mz_range[1] <= lo:
+            raise ValueError(
+                f"no m/z value in {path} falls inside mz_range {tuple(mz_range)}; "
+                f"the file covers {lo:g} to {hi:g}"
+            )
         grids = [gridding(np.asarray(mzs, dtype=float), np.asarray(intensities, dtype=float),
                           start=mz_range[0], end=mz_range[1], increment=increment, epsilon=epsilon)
                  for mzs, intensities in spectra]
@@ -58,6 +63,41 @@ def read_imzml(path, increment=None, mz_range=None, epsilon=0.025):
     obs = pd.DataFrame(np.asarray(parser.coordinates)[:, :3], columns=["x", "y", "z"],
                        index=[f"s{i}" for i in range(len(spectra))])
     return sc.AnnData(X=X, var=var, obs=obs)
+
+
+def write_h5ad(adata, path):
+    """Write an AnnData to ``.h5ad``, storing ``var["m/z"]`` as ``var["mz"]``.
+
+    anndata 0.13 refuses to write a column whose name contains a slash, so the m/z
+    values are stored under ``mz``; :func:`read_h5ad` restores them. The object
+    passed in is not modified, and its data are written without being copied.
+
+    :param adata: the ``anndata.AnnData`` to write, for example ``res.aligned``.
+    :param path: the ``.h5ad`` file to write.
+    """
+    if "m/z" in adata.var.columns and "mz" in adata.var.columns:
+        raise ValueError("var has both an 'm/z' and an 'mz' column; drop one before writing")
+    out = sc.AnnData(
+        X=adata.X, obs=adata.obs, var=adata.var.rename(columns={"m/z": "mz"}),
+        uns=dict(adata.uns), obsm=dict(adata.obsm), varm=dict(adata.varm),
+        layers=dict(adata.layers), obsp=dict(adata.obsp), varp=dict(adata.varp),
+    )
+    out.write_h5ad(path)
+
+
+def read_h5ad(path):
+    """Read an ``.h5ad`` file written by :func:`write_h5ad` or by older anndata.
+
+    Restores ``var["mz"]`` to ``var["m/z"]`` when the file has no ``m/z`` column;
+    files that store ``m/z`` itself are read as they are.
+
+    :param path: the ``.h5ad`` file to read.
+    :return: an ``anndata.AnnData`` with the m/z values in ``var["m/z"]``.
+    """
+    adata = sc.read_h5ad(path)
+    if "m/z" not in adata.var.columns and "mz" in adata.var.columns:
+        adata.var = adata.var.rename(columns={"mz": "m/z"})
+    return adata
 
 
 def read_scils_csv(spectra_csv, spots_csv=None, sep=";"):

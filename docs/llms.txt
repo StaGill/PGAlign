@@ -1,0 +1,21 @@
+# PGAlign
+
+> PGAlign aligns an unknown mass spectrometry imaging dataset (for example MALDI) onto a reference by peak groups, and returns the unknown spectra on the reference m/z grid so the two can be analysed jointly. Python package `pgalign` on PyPI; the whole pipeline is one call, `res = pgalign.align(unknown, reference)`.
+
+Inputs are two `anndata.AnnData` objects with the spectra in `X` (spectra by m/z bins) and the m/z values, increasing, in `var["m/z"]`. Files are read with `pgalign.read_imzml` (imzML; needs `pip install "pgalign[imzml]"`; processed imzML needs `increment=`), `pgalign.read_scils_csv` (SCiLS Lab CSV exports) or `pgalign.read_h5ad`, and results are saved with `pgalign.write_h5ad`, because anndata 0.13 cannot write a column named `m/z` itself. The result `res` holds `aligned` (the unknown on the reference grid), `reference` (the reference on the same bins and normalized scale), `shifts` (one row per paired peak group with its offset in grid points), `ambiguity` (shifted groups whose original position scores within `tau` of the chosen alignment) and `summary()`. The same pipeline runs from the shell as `pgalign align unknown.imzML reference.imzML -o aligned.h5ad --increment 0.25`. Release v1.0.1 is the version that accompanies the manuscript (Deng, Zhang and Zhang, under review at the Journal of Proteome Research).
+
+## Docs
+
+- [Tutorial](https://stagill.github.io/PGAlign/tutorial/): inputs, `pg.align`, its results, and the four steps run one at a time
+- [Install](https://stagill.github.io/PGAlign/install/): PyPI, the `imzml` extra and the dependency floors
+- [Command line](https://stagill.github.io/PGAlign/cli/): `pgalign align`, its options and its four output files
+- [Toy data](https://stagill.github.io/PGAlign/toy-data/): the bundled mouse pancreas slice with a planted shift of +2 bins
+- [align](https://stagill.github.io/PGAlign/api/pipeline/): reference for `align` and `AlignmentResult`
+- [Readers](https://stagill.github.io/PGAlign/api/readers/): reference for `read_imzml`, `read_scils_csv`, `read_h5ad` and `write_h5ad`
+
+## Optional
+
+- [PeakCalling](https://stagill.github.io/PGAlign/api/peak-calling/): Steps 1 and 2 as classes
+- [AnnDataMALDI](https://stagill.github.io/PGAlign/api/anndatamaldi/): Steps 3 and 4, the aligned dataset and the simulation
+- [Case studies](https://stagill.github.io/PGAlign/case-studies/): notebooks that reproduce the manuscript's analyses
+- [Citation](https://stagill.github.io/PGAlign/citation/): how to cite PGAlign

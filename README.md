@@ -170,8 +170,16 @@ paired at its own position but moved by a non-zero offset.
 
 ## Reproducing results from the manuscript
 
-The notebooks under `CodeInPaper/` reproduce the main analyses. Each
-subfolder has its own `README.md` with dataset access instructions:
+Release v1.0.1 is the version that accompanies the manuscript. Later releases
+may change the results, so install that version to reproduce them:
+
+```bash
+pip install "git+https://github.com/StaGill/PGAlign@v1.0.1"
+```
+
+The notebooks under `CodeInPaper/` reproduce the main analyses; run them from a
+checkout of the same release (`git checkout v1.0.1`). Each subfolder has its
+own `README.md` with dataset access instructions:
 
 - **Simulation study (mouse pancreas MALDI)**: alignment error under
   controlled peak shifts and noise. See `CodeInPaper/MousePancreate.ipynb`.

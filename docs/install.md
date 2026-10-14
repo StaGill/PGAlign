@@ -25,7 +25,7 @@ PGAlign depends on the standard scientific-Python stack plus `scanpy` /
 - `numpy >= 1.20`
 - `scipy >= 1.7`
 - `pandas >= 1.3`
-- `scanpy >= 1.9`
+- `scanpy >= 1.9.2`
 - `anndata >= 0.8`
 - `tqdm`
 

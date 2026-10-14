@@ -1,7 +1,9 @@
 # Case studies
 
 The notebooks under [`CodeInPaper/`](https://github.com/StaGill/PGAlign/tree/main/CodeInPaper)
-reproduce the analyses in the PGAlign manuscript.
+reproduce the analyses in the PGAlign manuscript. Release v1.0.1 is the version
+that accompanies the manuscript, and later releases may change the results, so
+run the notebooks from a checkout of that release (`git checkout v1.0.1`).
 
 | Subfolder / file                  | Case study                              | Results subsection             | Dataset access                                                                 |
 |-----------------------------------|-----------------------------------------|--------------------------------|--------------------------------------------------------------------------------|

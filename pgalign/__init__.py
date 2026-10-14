@@ -9,7 +9,7 @@ The four pipeline steps in the paper map to these public objects:
   Step 4  Fine Alignment Assessment     -> AnnDataMALDI.fine_alignment_assessment()
 """
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 from .util import (
     prefilter_cells,

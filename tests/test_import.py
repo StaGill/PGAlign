@@ -10,6 +10,8 @@ def test_version_is_string():
 
 def test_public_api_present():
     for name in [
+        "align",
+        "AlignmentResult",
         "AnnDataMALDI",
         "PeakCalling",
         "PeakCalling_single",

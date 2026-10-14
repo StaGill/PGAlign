@@ -7,6 +7,8 @@ The four pipeline steps in the paper map to these public objects:
   Step 2  Peak Grouping                 -> PeakCalling.peak_grouping()
   Step 3  Peak Group Pairing            -> AnnDataMALDI.peak_group_pairing()
   Step 4  Fine Alignment Assessment     -> AnnDataMALDI.fine_alignment_assessment()
+
+align() runs all four with the manuscript's defaults and returns the aligned dataset.
 """
 
 __version__ = "1.0.1"
@@ -36,10 +38,17 @@ from .PeakCalling import (
     PeakCalling_single,
     PeakCallingmv,
 )
+from .pipeline import (
+    AlignmentResult,
+    align,
+)
 from . import datasets
 
 __all__ = [
     "__version__",
+    # One-call pipeline
+    "align",
+    "AlignmentResult",
     # AnnDataMALDI core
     "AnnDataMALDI",
     "MALDI_SIM",

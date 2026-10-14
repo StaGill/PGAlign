@@ -24,7 +24,7 @@ while forcing matched spectra to share m/z values, PGAlign enables:
 | 4    | Fine Alignment Assessment   | `AnnDataMALDI.fine_alignment_assessment(threshold=0.2)`  |
 
 Similarity is measured with Pearson's correlation; Step 3 uses a sliding window
-of &plusmn;4 grid points. See [Tutorial](tutorial.md) for an end-to-end walk-through.
+of &plusmn;4 grid points. `pg.align(unk, ref)` runs all four steps in one call. See [Tutorial](tutorial.md) for an end-to-end walk-through.
 
 ## Next steps
 

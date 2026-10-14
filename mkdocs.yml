@@ -83,6 +83,7 @@ nav:
   - Tutorial: tutorial.md
   - Toy data: toy-data.md
   - API reference:
+      - align: api/pipeline.md
       - PeakCalling: api/peak-calling.md
       - AnnDataMALDI: api/anndatamaldi.md
       - Datasets: api/datasets.md

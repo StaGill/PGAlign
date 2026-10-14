@@ -80,7 +80,8 @@ The four-step pipeline in the paper maps to the following public methods:
 | 4    | Fine Alignment Assessment   | `AnnDataMALDI.fine_alignment_assessment(threshold=0.2)` |
 
 Similarity is measured with Pearson's correlation; Step 3 uses a sliding
-window of +/- 4 grid points (see Methods of the paper).
+window of +/- 4 grid points (see Methods of the paper). `pg.align(unk, ref)`
+runs all four steps in one call (see Quick start).
 
 The pre-2026 method names (`callpeak`, `grouppeaks`, `greedy_match`,
 `fine_align`) are kept as deprecated aliases and emit `DeprecationWarning`.
@@ -105,7 +106,27 @@ reference, so PGAlign should recover a shift of about +2 m/z bins.
 
 ## Quick start
 
-A minimal example is given in `Tutorial_PGAlign.ipynb`. The basic workflow is:
+```python
+import pgalign as pg
+
+unk, ref = pg.datasets.load_mouse_pancreas_toy()   # or your own two AnnData objects
+res = pg.align(unk, ref)
+print(res.summary())     # 7 groups paired, 7 shifted, 0 flagged at tau = 0.1
+aligned = res.aligned    # the unknown spectra on the reference m/z grid
+```
+
+`pg.align` normalizes each spectrum, runs the four steps with the manuscript's
+defaults and returns the aligned dataset with two tables: `res.shifts`, one row
+per paired peak group with its offset, and `res.ambiguity`, the diagnostic
+described under [Flagging ambiguous alignments](#flagging-ambiguous-alignments).
+By default it calls peaks on the three-point moving average described in the
+Methods; pass `smooth=False` for the peak caller used in the simulation study
+and the canine sarcoma analysis. The inputs are not modified.
+
+### Step by step
+
+The notebooks under `CodeInPaper/` run the pipeline one step at a time, and
+`Tutorial_PGAlign.ipynb` gives a worked example. The basic workflow is:
 
 1. Load two MALDI datasets (e.g., two time points or two tissues) with optional spatial coordinates.
 2. Wrap them as `AnnData` objects (via `scanpy` / `anndata`).

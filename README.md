@@ -5,6 +5,13 @@
   </picture>
 </p>
 
+<p align="center">
+  <a href="https://github.com/StaGill/PGAlign/actions/workflows/tests.yml"><img src="https://github.com/StaGill/PGAlign/actions/workflows/tests.yml/badge.svg?branch=main" alt="tests"></a>
+  <a href="https://stagill.github.io/PGAlign/"><img src="https://github.com/StaGill/PGAlign/actions/workflows/docs.yml/badge.svg?branch=main" alt="docs"></a>
+  <a href="https://github.com/StaGill/PGAlign/releases"><img src="https://img.shields.io/github/v/release/StaGill/PGAlign" alt="release"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/StaGill/PGAlign" alt="license"></a>
+</p>
+
 **PGAlign (Peak-Group Alignment of mass spectrometry data)** is a peak-group-based
 algorithm for aligning mass spectrometry (MS) spectra onto a common m/z grid.
 It is designed for imaging and spatial metabolomics data such as MALDI-MS,

@@ -29,10 +29,17 @@ PGAlign depends on the standard scientific-Python stack plus `scanpy` /
 - `anndata >= 0.8`
 - `tqdm`
 
+Reading imzML files with `pg.read_imzml` needs one optional package,
+`pyimzML >= 1.5`, installed with the `imzml` extra:
+
+```bash
+pip install -e ".[imzml]"
+```
+
 For development (running the test suite):
 
 ```bash
-pip install -e ".[test]"
+pip install -e ".[test,imzml]"
 pytest -q
 ```
 

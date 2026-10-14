@@ -20,7 +20,7 @@ jobs:
           # The lower bounds declared in pyproject.toml and docs/install.md; change all three together.
           - deps: minimum
             python-version: "3.9"
-            pins: "numpy==1.20.0 scipy==1.7.0 pandas==1.3.0 scanpy==1.9.2 anndata==0.8.0"
+            pins: "numpy==1.20.0 scipy==1.7.0 pandas==1.3.0 scanpy==1.9.2 anndata==0.8.0 pyimzML==1.5.0"
           # The newest Python the scanpy stack ships wheels for, with the latest releases.
           - deps: latest
             python-version: "3.14"
@@ -31,8 +31,8 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install PGAlign
-        run: pip install -e ".[test]" ${{ matrix.pins }}
+        run: pip install -e ".[test,imzml]" ${{ matrix.pins }}
       - name: Show versions
-        run: python -c "import sys, importlib.metadata as m; print(sys.version.split()[0], *(f'{p} {m.version(p)}' for p in ['numpy', 'scipy', 'pandas', 'scanpy', 'anndata']))"
+        run: python -c "import sys, importlib.metadata as m; print(sys.version.split()[0], *(f'{p} {m.version(p)}' for p in ['numpy', 'scipy', 'pandas', 'scanpy', 'anndata', 'pyimzML']))"
       - name: Run tests
         run: pytest -q

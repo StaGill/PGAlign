@@ -48,6 +48,7 @@ dependencies = [
 
 [project.optional-dependencies]
 test = ["pytest>=7.0"]
+imzml = ["pyimzML>=1.5"]
 
 [project.urls]
 Homepage = "https://stagill.github.io/PGAlign/"

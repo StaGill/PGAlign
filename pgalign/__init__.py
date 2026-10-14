@@ -42,6 +42,10 @@ from .pipeline import (
     AlignmentResult,
     align,
 )
+from .readers import (
+    read_imzml,
+    read_scils_csv,
+)
 from . import datasets
 
 __all__ = [
@@ -49,6 +53,9 @@ __all__ = [
     # One-call pipeline
     "align",
     "AlignmentResult",
+    # Readers
+    "read_imzml",
+    "read_scils_csv",
     # AnnDataMALDI core
     "AnnDataMALDI",
     "MALDI_SIM",

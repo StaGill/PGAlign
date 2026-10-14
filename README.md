@@ -104,6 +104,20 @@ reference, so PGAlign should recover a shift of about +2 m/z bins.
 
 ---
 
+## Reading your data
+
+```python
+unk = pg.read_imzml("unknown.imzML", increment=0.25)     # pip install "pgalign[imzml]"
+ref = pg.read_imzml("reference.imzML", increment=0.25)
+```
+
+`pg.read_imzml` reads continuous imzML as it is and puts processed imzML, where
+each spectrum carries its own m/z values, on a common grid. `pg.read_scils_csv`
+reads SCiLS Lab CSV exports, and `.h5ad` files load with `scanpy.read_h5ad`.
+Each gives an `AnnData` with the m/z values in `var["m/z"]`, ready for `pg.align`.
+
+---
+
 ## Quick start
 
 ```python

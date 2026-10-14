@@ -84,6 +84,7 @@ nav:
   - Toy data: toy-data.md
   - API reference:
       - align: api/pipeline.md
+      - Readers: api/readers.md
       - PeakCalling: api/peak-calling.md
       - AnnDataMALDI: api/anndatamaldi.md
       - Datasets: api/datasets.md

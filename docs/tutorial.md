@@ -10,7 +10,9 @@ PGAlign operates on two `AnnData` objects: the *reference* spectrum and the
 intensity matrix; `var` carries m/z values as the `"m/z"` column; `obs` holds
 per-pixel coordinates.
 
-You can use the bundled [toy dataset](toy-data.md) for a quick try-out:
+To read your own files, `pg.read_imzml` handles imzML and `pg.read_scils_csv`
+SCiLS Lab CSV exports (see [Readers](api/readers.md)). You can also use the
+bundled [toy dataset](toy-data.md) for a quick try-out:
 
 ```python
 import pgalign as pg

@@ -3,9 +3,43 @@
 import numpy as np
 import pandas as pd
 import scanpy as sc
+import scipy.sparse as sp
 
 from .AnnDataMALDI import AnnDataMALDI, PGmzalign
 from .PeakCalling import PeakCalling, PeakCallingmv
+
+
+def _check_inputs(unk, ref):
+    """Raise a ValueError that names the problem and the fix for input pg.align cannot use."""
+    ranges = []
+    for name, adata in (("unk", unk), ("ref", ref)):
+        if "m/z" not in adata.var.columns:
+            raise ValueError(
+                f"{name}.var has no 'm/z' column (columns: {list(adata.var.columns)}); "
+                f"store the m/z values as {name}.var['m/z']"
+            )
+        mz = adata.var["m/z"].to_numpy(dtype=float)
+        if not np.isfinite(mz).all():
+            raise ValueError(f"{name}.var['m/z'] contains missing or infinite values")
+        if np.any(np.diff(mz) <= 0):
+            raise ValueError(
+                f"{name}.var['m/z'] must be strictly increasing; sort the bins with "
+                f"{name} = {name}[:, np.argsort({name}.var['m/z'].to_numpy())]"
+            )
+        values = adata.X.data if sp.issparse(adata.X) else np.asarray(adata.X)
+        n_bad = int(np.count_nonzero(~np.isfinite(values)))
+        if n_bad:
+            raise ValueError(
+                f"{name}.X contains {n_bad} missing or infinite intensities; "
+                "replace them, for example with 0"
+            )
+        ranges.append((mz[0], mz[-1]))
+    (unk_lo, unk_hi), (ref_lo, ref_hi) = ranges
+    if max(unk_lo, ref_lo) >= min(unk_hi, ref_hi):
+        raise ValueError(
+            f"the m/z ranges do not overlap: unk covers {unk_lo:g} to {unk_hi:g}, "
+            f"ref covers {ref_lo:g} to {ref_hi:g}"
+        )
 
 
 class AlignmentResult(object):
@@ -58,7 +92,10 @@ def align(unk, ref, smooth=True, alpha=0.9, percentile=0.9, delta=0, tau=0.1, no
     ``PeakCalling``, as in the simulation study and the canine sarcoma analysis.
     Step 4 applies the best offset to every paired group, as every analysis in the
     manuscript did (``fine_alignment_assessment(ignore=True)``). The inputs are not
-    modified.
+    modified; a sparse intensity matrix is accepted and densified on the copy.
+    Input that cannot be aligned (no ``var["m/z"]``, m/z not increasing, missing
+    intensities, m/z ranges that do not overlap) raises a ``ValueError`` saying
+    what to fix.
 
     :param unk: the unknown dataset, an ``anndata.AnnData`` with the m/z values in
         ``var["m/z"]``.
@@ -76,9 +113,13 @@ def align(unk, ref, smooth=True, alpha=0.9, percentile=0.9, delta=0, tau=0.1, no
         Defaults to True.
     :return: an :class:`AlignmentResult`.
     """
+    _check_inputs(unk, ref)
+    unk = unk.copy()
+    ref = ref.copy()
+    for adata in (unk, ref):
+        if sp.issparse(adata.X):
+            adata.X = adata.X.toarray()
     if normalize:
-        unk = unk.copy()
-        ref = ref.copy()
         sc.pp.normalize_total(unk)
         sc.pp.normalize_total(ref)
     peaks = (PeakCallingmv if smooth else PeakCalling)(unk, ref)

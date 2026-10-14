@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pgalign"
 dynamic = ["version"]
-description = "PGAlign: peak group alignment of mass spectrometry data for imaging and spatial metabolomics."
+description = "Peak group alignment of mass spectrometry imaging data onto a reference m/z grid."
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]

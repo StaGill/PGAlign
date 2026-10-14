@@ -1,5 +1,5 @@
 site_name: PGAlign
-site_description: Peak group alignment of mass spectrometry data for imaging and spatial metabolomics
+site_description: Peak group alignment of mass spectrometry imaging data onto a reference m/z grid.
 site_url: https://stagill.github.io/PGAlign/
 repo_url: https://github.com/StaGill/PGAlign
 repo_name: StaGill/PGAlign

@@ -11,7 +11,7 @@ The four pipeline steps in the paper map to these public objects:
 align() runs all four with the manuscript's defaults and returns the aligned dataset.
 """
 
-__version__ = "1.1.0"
+__version__ = "2.0.0"
 
 from .util import (
     gridding,

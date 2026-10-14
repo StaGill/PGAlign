@@ -15,6 +15,9 @@ class AlignmentResult(object):
         ``anndata.AnnData``. ``var["m/z"]`` holds the reference m/z values and
         ``obs`` the unknown spectra. It is cut to the shorter of the two m/z axes,
         so it can lack a few bins at the top of the range.
+    :ivar reference: the reference spectra on the same bins and the same scale as
+        ``aligned``, so the two can be analysed jointly. Both carry the
+        reference's bin labels as ``var_names``.
     :ivar shifts: a DataFrame with one row per paired peak group: ``unknown_group``,
         ``reference_group``, ``mz_start`` and ``mz_end`` (reference m/z range) and
         ``offset``, the shift in grid points applied in Step 4.
@@ -25,8 +28,9 @@ class AlignmentResult(object):
     :ivar tau: the tolerance the ambiguity table was computed with.
     """
 
-    def __init__(self, aligned, shifts, ambiguity, peaks, steps, tau):
+    def __init__(self, aligned, reference, shifts, ambiguity, peaks, steps, tau):
         self.aligned = aligned
+        self.reference = reference
         self.shifts = shifts
         self.ambiguity = ambiguity
         self.peaks = peaks
@@ -67,8 +71,9 @@ def align(unk, ref, smooth=True, alpha=0.9, percentile=0.9, delta=0, tau=0.1, no
     :param tau: the tolerance of the diagnostic for ambiguous alignments (tau in the
         paper). Defaults to 0.1.
     :param normalize: scale each spectrum to the median total intensity before
-        aligning (Methods, "Data normalization"), on copies of the inputs. The
-        aligned dataset is returned on this normalized scale. Defaults to True.
+        aligning (Methods, "Data normalization"), on copies of the inputs.
+        ``aligned`` and ``reference`` are returned on this normalized scale.
+        Defaults to True.
     :return: an :class:`AlignmentResult`.
     """
     if normalize:
@@ -86,6 +91,8 @@ def align(unk, ref, smooth=True, alpha=0.9, percentile=0.9, delta=0, tau=0.1, no
     steps.summarize()
     ambiguity = steps.flag_ambiguous_alignments(delta=tau)
     aligned = PGmzalign(steps).getAnnSim()
+    reference = ref[:, :aligned.n_vars].copy()
+    aligned.var_names = reference.var_names
     mz_ref = ref.var["m/z"].to_numpy(dtype=float)
     shifts = pd.DataFrame({
         "unknown_group": steps.align_group[:, 0].astype(int),
@@ -94,4 +101,4 @@ def align(unk, ref, smooth=True, alpha=0.9, percentile=0.9, delta=0, tau=0.1, no
         "mz_end": [mz_ref[group[-1]] for group in steps.aligned_mz_clusters_ref],
         "offset": np.asarray(steps.changerecord, dtype=int),
     })
-    return AlignmentResult(aligned, shifts, ambiguity, peaks, steps, tau)
+    return AlignmentResult(aligned, reference, shifts, ambiguity, peaks, steps, tau)

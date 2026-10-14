@@ -147,7 +147,7 @@ sc.pp.normalize_per_cell(MALDIdataAnn1)
 sc.pp.normalize_per_cell(MALDIdataAnn2)
 
 # Step 1 + Step 2: peak calling and peak grouping
-PeakGroup = pg.PeakCalling(MALDIdataAnn1, MALDIdataAnn2)
+PeakGroup = pg.PeakCalling(MALDIdataAnn1, MALDIdataAnn2)   # pg.align uses pg.PeakCallingmv by default
 PeakGroup.peak_calling(threshold=0.9)
 PeakGroup.peak_grouping(percentile=0.9)
 

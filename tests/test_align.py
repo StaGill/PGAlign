@@ -44,6 +44,12 @@ def test_result_on_toy_data(toy, smooth, n_groups):
     assert set(res.shifts["offset"]) == {2}
     assert (res.shifts["mz_start"] <= res.shifts["mz_end"]).all()
     assert res.aligned.shape == (unk.n_obs, ref.n_vars - 2)
+    assert res.reference.shape == (ref.n_obs, ref.n_vars - 2)
+    assert list(res.reference.var_names) == list(res.aligned.var_names)
+    normalized = ref.copy()
+    sc.pp.normalize_total(normalized)
+    np.testing.assert_array_equal(np.asarray(res.reference.X), np.asarray(normalized.X)[:, :ref.n_vars - 2])
+    assert sc.concat([res.reference, res.aligned]).n_vars == ref.n_vars - 2
 
 
 def test_align_leaves_inputs_unchanged(toy):

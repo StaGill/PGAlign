@@ -37,23 +37,17 @@ print(ref.var["m/z"].head())       # 100.0, 100.25, ..., 250.0
 import pgalign as pg
 
 unk, ref = pg.datasets.load_mouse_pancreas_toy()
+res = pg.align(unk, ref)
 
-pc = pg.PeakCalling(unk, ref)
-pc.peak_calling(threshold=0.9)
-pc.peak_grouping(percentile=0.9)
+print(res.summary())                  # 7 groups paired, 7 shifted, 0 flagged at tau = 0.1
+print(res.shifts["offset"].unique())  # [2]: every paired group recovers the planted shift
 
-align = pg.AnnDataMALDI(unk, ref)
-align.get_corr_peakgroup_refined(pc.jointcluster)
-align.peak_group_pairing(criteria=0)
-align.fine_alignment_assessment(threshold=0.0, ignore=True)
-align.summarize()
-
-import numpy as np
-print("recovered mean shift:", float(np.mean(align.changerecord)))  # ~+2
-
-aligned = pg.PGmzalign(align).getAnnSim()   # unknown spectra on the reference m/z grid
-print(aligned.shape)                        # (120, 599): two bins lost at the top
+aligned = res.aligned                 # unknown spectra on the reference m/z grid
+print(aligned.shape)                  # (120, 599): two bins lost at the top
 ```
+
+With `smooth=False` (the peak caller of the simulation study and the canine
+sarcoma analysis) 15 groups are paired, and each again recovers the shift of +2.
 
 ## API
 

@@ -19,9 +19,23 @@ def test_public_api_present():
         "MALDI_SIM",
         "PGmzalign",
         "gridding",
-        "GKernal",
+        "save_clusterresults",
+        "spectrum_save",
+        "read_imzml",
+        "read_scils_csv",
+        "read_h5ad",
+        "write_h5ad",
     ]:
         assert hasattr(pg, name), f"pgalign is missing public name: {name}"
+
+
+def test_removed_names_are_gone():
+    """Single-cell leftovers were deleted in 2.0; internal helpers stay in pgalign.util only."""
+    for name in ["prefilter_cells", "prefilter_genes", "prefilter_specialgenes", "GKernal",
+                 "rotate", "group_range", "in_range_lookup", "comp_clusters", "find_nearest",
+                 "get_unk_comp_clusters"]:
+        assert not hasattr(pg, name), f"pgalign still exports {name}"
+    assert callable(pg.util.in_range_lookup) and callable(pg.util.nadaraya_watson)
 
 
 def test_paper_aligned_methods_exist():

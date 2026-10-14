@@ -14,19 +14,9 @@ align() runs all four with the manuscript's defaults and returns the aligned dat
 __version__ = "1.1.0"
 
 from .util import (
-    prefilter_cells,
-    prefilter_genes,
-    prefilter_specialgenes,
-    save_clusterresults,
-    rotate,
-    group_range,
-    in_range_lookup,
-    comp_clusters,
-    find_nearest,
-    get_unk_comp_clusters,
-    spectrum_save,
-    GKernal,
     gridding,
+    save_clusterresults,
+    spectrum_save,
 )
 from .AnnDataMALDI import (
     AnnDataMALDI,
@@ -71,17 +61,7 @@ __all__ = [
     # Toy data
     "datasets",
     # Utilities
-    "prefilter_cells",
-    "prefilter_genes",
-    "prefilter_specialgenes",
-    "save_clusterresults",
-    "rotate",
-    "group_range",
-    "in_range_lookup",
-    "comp_clusters",
-    "find_nearest",
-    "get_unk_comp_clusters",
-    "spectrum_save",
-    "GKernal",
     "gridding",
+    "save_clusterresults",
+    "spectrum_save",
 ]

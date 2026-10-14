@@ -32,6 +32,7 @@ example that stops working fails the build.
 - `pgalign/PeakCalling.py`: Steps 1 and 2 (`PeakCallingmv`, `PeakCalling`, `PeakCalling_single`).
 - `pgalign/AnnDataMALDI.py`: Steps 3 and 4 (`AnnDataMALDI`), the aligned dataset (`PGmzalign`) and the simulation (`MALDI_SIM`).
 - `pgalign/readers.py`: `read_imzml`, `read_scils_csv`, `read_h5ad`, `write_h5ad`.
+- `pgalign/util.py`: `gridding`, `save_clusterresults` and `spectrum_save`, plus helpers that serve the step classes and are not exported from `pgalign`.
 - `pgalign/cli.py`: the `pgalign align` command.
 - `pgalign/datasets.py` and `pgalign/data/`: the toy dataset; `scripts/make_toy_data.py` rebuilds it.
 - `CodeInPaper/`: the notebooks behind the manuscript's analyses. They call the step classes directly.

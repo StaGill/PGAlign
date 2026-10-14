@@ -136,8 +136,13 @@ class PeakCalling(object):
         self.jointcluster = [clusteri for clusteri in self.jointcluster if clusteri[-1] < mzboundary]
 
     def importpeak(self, peakUnk, peakRef):
+        """Use peaks called elsewhere in place of Step 1.
+
+        :param peakUnk: indices of the peak points in the unknown spectrum.
+        :param peakRef: indices of the peak points in the reference spectrum.
+        """
         self.peakUnk = np.zeros(self.mz_valueUnk.shape[0], dtype=bool)
-        self.peakRef = self.peakUnk
+        self.peakRef = np.zeros(self.mz_valueRef.shape[0], dtype=bool)
         for i in range(peakUnk.shape[0]):
             self.peakUnk[peakUnk[i]] = True
         for j in range(peakRef.shape[0]):
@@ -187,7 +192,12 @@ class PeakCalling_single(PeakCalling):
         self.jointcluster = [clusteri for clusteri in self.jointcluster if clusteri[-1] < mzboundary]
 
     def importpeak(self, peakUnk, peakRef):
-        self.peakRef = self.peakUnk
+        """Use peaks called elsewhere in place of Step 1; ``peakUnk`` is ignored.
+
+        :param peakUnk: unused, kept for the signature of ``PeakCalling.importpeak``.
+        :param peakRef: indices of the peak points in the reference spectrum.
+        """
+        self.peakRef = np.zeros(self.mz_valueRef.shape[0], dtype=bool)
         for j in range(peakRef.shape[0]):
             self.peakRef[peakRef[j]] = True
         self.meanspectrumRefpeak = self.meanspectrumRef[self.peakRef]

@@ -1,27 +1,11 @@
 # Utilities
 
-Helpers used by PGAlign's peak-calling and alignment routines.
+`gridding` puts a spectrum with irregular m/z values on a uniform grid, as
+`pg.read_imzml` does for processed imzML. `save_clusterresults` and
+`spectrum_save` write peak groups and spectra to CSV.
 
 ::: pgalign.util.gridding
-
-::: pgalign.util.GKernal
-
-::: pgalign.util.find_nearest
-
-::: pgalign.util.in_range_lookup
-
-::: pgalign.util.comp_clusters
-
-::: pgalign.util.get_unk_comp_clusters
-
-::: pgalign.util.group_range
 
 ::: pgalign.util.save_clusterresults
 
 ::: pgalign.util.spectrum_save
-
-::: pgalign.util.prefilter_cells
-
-::: pgalign.util.prefilter_genes
-
-::: pgalign.util.prefilter_specialgenes

@@ -1,44 +1,10 @@
-"""Utility helpers used by PGAlign's peak-calling and alignment routines."""
+"""Utilities. ``gridding``, ``save_clusterresults`` and ``spectrum_save`` are public;
+the other helpers serve the step classes and are not exported from ``pgalign``."""
 
-import logging
 import math
 
 import numpy as np
 import pandas as pd
-import scanpy as sc
-
-logger = logging.getLogger(__name__)
-
-
-def prefilter_cells(adata, min_counts=None, max_counts=None, min_genes=200, max_genes=None):
-    if min_genes is None and min_counts is None and max_genes is None and max_counts is None:
-        raise ValueError('Provide one of min_counts, min_genes, max_counts or max_genes.')
-    id_tmp = np.asarray([True] * adata.shape[0], dtype=bool)
-    id_tmp = np.logical_and(id_tmp, sc.pp.filter_cells(adata.X, min_genes=min_genes)[0]) if min_genes is not None else id_tmp
-    id_tmp = np.logical_and(id_tmp, sc.pp.filter_cells(adata.X, max_genes=max_genes)[0]) if max_genes is not None else id_tmp
-    id_tmp = np.logical_and(id_tmp, sc.pp.filter_cells(adata.X, min_counts=min_counts)[0]) if min_counts is not None else id_tmp
-    id_tmp = np.logical_and(id_tmp, sc.pp.filter_cells(adata.X, max_counts=max_counts)[0]) if max_counts is not None else id_tmp
-    adata._inplace_subset_obs(id_tmp)
-    adata.raw = sc.pp.log1p(adata, copy=True)
-    logger.debug("adata.raw.var_names.is_unique = %s", adata.raw.var_names.is_unique)
-
-
-def prefilter_genes(adata, min_counts=None, max_counts=None, min_cells=10, max_cells=None):
-    if min_cells is None and min_counts is None and max_cells is None and max_counts is None:
-        raise ValueError('Provide one of min_counts, min_genes, max_counts or max_genes.')
-    id_tmp = np.asarray([True] * adata.shape[1], dtype=bool)
-    id_tmp = np.logical_and(id_tmp, sc.pp.filter_genes(adata.X, min_cells=min_cells)[0]) if min_cells is not None else id_tmp
-    id_tmp = np.logical_and(id_tmp, sc.pp.filter_genes(adata.X, max_cells=max_cells)[0]) if max_cells is not None else id_tmp
-    id_tmp = np.logical_and(id_tmp, sc.pp.filter_genes(adata.X, min_counts=min_counts)[0]) if min_counts is not None else id_tmp
-    id_tmp = np.logical_and(id_tmp, sc.pp.filter_genes(adata.X, max_counts=max_counts)[0]) if max_counts is not None else id_tmp
-    adata._inplace_subset_var(id_tmp)
-
-
-def prefilter_specialgenes(adata, Gene1Pattern="ERCC", Gene2Pattern="MT-"):
-    id_tmp1 = np.asarray([not str(name).startswith(Gene1Pattern) for name in adata.var_names], dtype=bool)
-    id_tmp2 = np.asarray([not str(name).startswith(Gene2Pattern) for name in adata.var_names], dtype=bool)
-    id_tmp = np.logical_and(id_tmp1, id_tmp2)
-    adata._inplace_subset_var(id_tmp)
 
 
 def save_clusterresults(cluster, filepath):
@@ -110,8 +76,8 @@ def spectrum_save(mz, intensity, name):
     originaltable.to_csv("{name}.csv".format(name=name))
 
 
-def GKernal(x0, x, y, sig=1.):
-    """Gaussian kernel smoother evaluated at ``x0``."""
+def nadaraya_watson(x0, x, y, sig=1.):
+    """Nadaraya-Watson estimate of ``y`` at ``x0``, with a Gaussian kernel of bandwidth ``sig``."""
     ax = x - x0
     Kernal = np.exp(-0.5 * np.square(ax) / np.square(sig))
     Weighted = Kernal * y
@@ -127,7 +93,7 @@ def gridding(mz, intensity, start=None, end=None, increment=0.125, epsilon=0.025
     target_grid = np.arange(start, end, increment)
     intensity_out = np.zeros(target_grid.shape[0])
     for i in range(target_grid.shape[0]):
-        calculation = GKernal(target_grid[i], mz, intensity, sig=epsilon)
+        calculation = nadaraya_watson(target_grid[i], mz, intensity, sig=epsilon)
         if calculation == calculation:
             intensity_out[i] = calculation
         else:
